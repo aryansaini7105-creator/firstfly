@@ -1,0 +1,6 @@
+{
+  "name": "FirstFly Tours & Travels — All India Cab & Luxury Vehicle Rentals",
+  "description": "Book verified AC cabs, Toyota Innova Crysta, Maruti Ertiga, Force Traveller & Urbania across India with 24/7 real-time AI concierge, instant transparent fare calculator, live GPS tracking, and premium tour packages.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

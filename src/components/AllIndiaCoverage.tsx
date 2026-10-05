@@ -8,7 +8,8 @@ import {
   CheckCircle2,
   Navigation,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Sun
 } from 'lucide-react';
 import { COMPANY_DETAILS } from '../data/travelData';
 
@@ -17,7 +18,7 @@ interface AllIndiaCoverageProps {
 }
 
 export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorridor }) => {
-  const [activeRegion, setActiveRegion] = useState<'all' | 'hills' | 'airports' | 'heritage' | 'pilgrimage'>('all');
+  const [activeRegion, setActiveRegion] = useState<'all' | 'hills' | 'airports' | 'south' | 'heritage' | 'pilgrimage'>('all');
 
   const regions = [
     {
@@ -36,7 +37,7 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
         'Nainital & Bhimtal',
         'Spiti Valley & Leh Ladakh',
       ],
-      defaultRoute: { from: 'Chandigarh', to: 'Manali' },
+      defaultRoute: { from: 'Chandigarh / Mohali / Zirakpur', to: 'Manali / Solang Valley / Rohtang' },
     },
     {
       id: 'airports',
@@ -48,11 +49,32 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
       destinations: [
         'Delhi IGI Airport (Terminals 1, 2 & 3)',
         'Chandigarh Shaheed Bhagat Singh Int’l (IXC)',
+        'Bangalore Kempegowda Int’l (BLR)',
+        'Cochin International Airport (COK)',
         'Amritsar Sri Guru Ram Dass Jee Int’l (ATQ)',
         'Dehradun Jolly Grant Airport (DED)',
         'Jaipur International Airport (JAI)',
       ],
-      defaultRoute: { from: 'Chandigarh', to: 'Delhi NCR' },
+      defaultRoute: { from: 'Delhi IGI Airport (T3/T1/T2)', to: 'Chandigarh / Mohali / Zirakpur' },
+    },
+    {
+      id: 'south',
+      title: 'South India & Western Ghats Corridors',
+      icon: <Sun className="w-5 h-5 text-emerald-400" />,
+      tag: 'Coffee Plantations & Coastal Escapes',
+      description:
+        'Interstate touring across Karnataka, Kerala, Tamil Nadu, and Goa. Clean AC vehicles for misty Western Ghats, hill stations, and coastal road trips.',
+      destinations: [
+        'Bangalore (Airport & City Hubs)',
+        'Coorg (Madikeri) & Chikmagalur',
+        'Ooty & Nilgiris Toy Train Route',
+        'Munnar & Alleppey Backwaters',
+        'Kochi & Fort Cochin',
+        'Goa (North & South Beaches / Mopa Airport)',
+        'Chennai, Mahabalipuram & Pondicherry',
+        'Tirupati Balaji Sacred Darshan',
+      ],
+      defaultRoute: { from: 'Bangalore (Kempegowda Airport BLR / City)', to: 'Coorg (Madikeri) / Chikmagalur' },
     },
     {
       id: 'heritage',
@@ -69,7 +91,7 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
         'Delhi NCR (Gurgaon, Noida, Faridabad)',
         'Chandigarh - Mohali - Panchkula Tricity',
       ],
-      defaultRoute: { from: 'Delhi NCR', to: 'Jaipur' },
+      defaultRoute: { from: 'Delhi NCR (New Delhi / Gurgaon / Noida)', to: 'Jaipur / Udaipur / Jodhpur' },
     },
     {
       id: 'pilgrimage',
@@ -86,7 +108,7 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
         'Katra Mata Vaishno Devi Shrine',
         'Mathura & Vrindavan Braj Darshan',
       ],
-      defaultRoute: { from: 'Delhi NCR', to: 'Rishikesh' },
+      defaultRoute: { from: 'Delhi NCR (New Delhi / Gurgaon / Noida)', to: 'Rishikesh / Haridwar' },
     },
   ];
 
@@ -105,8 +127,8 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
             Seamless Travel Across All Over India
           </h2>
           <p className="mt-3 text-slate-400 text-sm sm:text-base">
-            Whether it’s a quick airport transfer, a family vacation in Himachal, or an interstate
-            wedding convoy. FirstFly operates 24/7 across every major Indian tourist and highway circuit.
+            Whether it’s a quick airport transfer, a family vacation in Himachal, a South India tour
+            to Coorg or Munnar, or an interstate wedding convoy. FirstFly operates 24/7 across India.
           </p>
 
           {/* Filter Pills */}
@@ -114,14 +136,16 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
             {[
               { id: 'all', label: 'All India Network' },
               { id: 'hills', label: 'Himalayan Hills' },
-              { id: 'airports', label: 'Airport Hubs' },
+              { id: 'airports', label: 'Delhi & South Airports' },
+              { id: 'south', label: 'South India & Goa' },
               { id: 'heritage', label: 'Expressways & Royal' },
               { id: 'pilgrimage', label: 'Spiritual Circuits' },
             ].map((tab) => (
               <button
                 key={tab.id}
+                type="button"
                 onClick={() => setActiveRegion(tab.id as any)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeRegion === tab.id
                     ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                     : 'text-slate-400 hover:text-white'
@@ -161,18 +185,22 @@ export const AllIndiaCoverage: React.FC<AllIndiaCoverageProps> = ({ onSelectCorr
 
                 {/* Destinations Cloud */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">
-                    Popular Drops & Tourist Destinations Covered:
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                    <span>Popular Drops & Tourist Destinations Covered:</span>
+                    <span className="text-[10px] text-amber-400/80 font-normal">Click to quick-book</span>
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {region.destinations.map((dest, i) => (
-                      <span
+                      <button
                         key={i}
-                        className="px-3 py-1.5 rounded-xl bg-slate-950 text-slate-200 text-xs font-medium border border-slate-800/80 flex items-center gap-1.5"
+                        type="button"
+                        onClick={() => onSelectCorridor(region.defaultRoute.from, dest)}
+                        className="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-amber-500/15 hover:border-amber-500/50 text-slate-200 hover:text-amber-300 text-xs font-medium border border-slate-800/80 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 group/btn"
+                        title={`Click to book ride to ${dest}`}
                       >
-                        <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
+                        <MapPin className="w-3 h-3 text-amber-400 shrink-0 group-hover/btn:scale-110 transition-transform" />
                         <span>{dest}</span>
-                      </span>
+                      </button>
                     ))}
                   </div>
                 </div>

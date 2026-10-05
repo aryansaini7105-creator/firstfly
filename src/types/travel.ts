@@ -36,7 +36,7 @@ export interface RoutePreset {
   to: string;
   distanceKm: number;
   durationHours: number;
-  category: 'Hill Station' | 'Expressway' | 'Pilgrimage' | 'Heritage' | 'Business';
+  category: 'Hill Station' | 'Expressway' | 'Pilgrimage' | 'Heritage' | 'Business' | 'South India' | 'Airport';
   highwayName: string;
   tollEstimate: number;
   startingPrice: number;
@@ -54,7 +54,7 @@ export interface TourPackage {
   days: number;
   nights: number;
   image: string;
-  category: 'hills' | 'pilgrimage' | 'heritage' | 'weekend';
+  category: 'hills' | 'pilgrimage' | 'heritage' | 'weekend' | 'south' | 'airports';
   rating: number;
   pricePerVehicle: number;
   recommendedVehicle: string;

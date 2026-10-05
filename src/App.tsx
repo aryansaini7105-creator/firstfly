@@ -4,6 +4,7 @@ import { Hero } from './components/Hero';
 import { FleetSection } from './components/FleetSection';
 import { FleetGallery } from './components/FleetGallery';
 import { RouteFareCalculator } from './components/RouteFareCalculator';
+import { AirportAndKeralaHub } from './components/AirportAndKeralaHub';
 import { TourPackagesSection } from './components/TourPackagesSection';
 import { AllIndiaCoverage } from './components/AllIndiaCoverage';
 import { SecurityAndSafety } from './components/SecurityAndSafety';
@@ -92,9 +93,11 @@ export default function App() {
 
         <FleetSection onSelectVehicle={handleSelectVehicle} />
 
-        <FleetGallery />
+        <FleetGallery onOpenBooking={() => setIsBookingOpen(true)} />
 
         <RouteFareCalculator onSelectRoute={handleSelectRoute} />
+
+        <AirportAndKeralaHub onSelectCorridor={handleSelectCorridor} />
 
         <TourPackagesSection onBookPackage={handleBookPackage} />
 
@@ -110,8 +113,8 @@ export default function App() {
       {/* Footer */}
       <Footer />
 
-      {/* ═══ FLOATING ACTION BUTTONS ═══ */}
-      <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3 pointer-events-auto">
+      {/* ═══ FLOATING ACTION BUTTONS (Desktop & Tablet only to avoid mobile bar overlap) ═══ */}
+      <div className="hidden sm:flex fixed bottom-6 right-6 z-30 flex-col items-end gap-3 pointer-events-auto">
         {/* WhatsApp Quick Link */}
         <a
           href={`https://wa.me/${COMPANY_DETAILS.cleanPhone}?text=Hello%20FirstFly,%20I%20would%20like%20to%20book%20a%20cab.`}

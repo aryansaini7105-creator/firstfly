@@ -217,29 +217,28 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                   {/* Pricing & CTA */}
                   <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400">
-                        Tariff Rate
+                      <span className="text-[10px] uppercase font-bold text-emerald-400 flex items-center gap-1">
+                        <Check className="w-3 h-3" /> Best Rate Guarantee
                       </span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-amber-400 font-heading">
-                          ₹{vehicle.pricePerKm}
-                        </span>
-                        <span className="text-xs text-slate-400">/ km</span>
-                      </div>
+                      <p className="text-sm font-black text-white font-heading">
+                        Custom Quote on Request
+                      </p>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         onClick={() => setSelectedVehicleForModal(vehicle)}
-                        className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
+                        className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors cursor-pointer"
                       >
                         Specs
                       </button>
                       <button
+                        type="button"
                         onClick={() => onSelectVehicle(vehicle)}
-                        className="px-4 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:from-amber-400 hover:to-amber-500 transition-all shadow-md shadow-amber-500/20 active:scale-95 flex items-center gap-1"
+                        className="px-4 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:from-amber-400 hover:to-amber-500 transition-all shadow-md shadow-amber-500/20 active:scale-95 flex items-center gap-1 cursor-pointer"
                       >
-                        <span>Book</span>
+                        <span>Book / Inquire</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -316,9 +315,9 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                   <p className="text-slate-400">{selectedVehicleForModal.bestFor}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-amber-400">Driver Allowance</p>
+                  <p className="font-bold text-amber-400">Driver & Chauffeur</p>
                   <p className="text-slate-400">
-                    ₹{selectedVehicleForModal.driverAllowancePerDay} / day
+                    Experienced Hill & Highway Driver Included
                   </p>
                 </div>
               </div>
@@ -342,26 +341,30 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
             {/* Action Bar */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-800">
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-bold">Standard Rate</span>
-                <p className="text-xl font-black text-amber-400 font-heading">
-                  ₹{selectedVehicleForModal.pricePerKm} / km
+                <span className="text-[10px] text-emerald-400 uppercase font-bold flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3" /> All-India Tourist Permit
+                </span>
+                <p className="text-sm font-black text-white font-heading">
+                  Custom Lowest Fare on Inquiry
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
+                  type="button"
                   onClick={() => setSelectedVehicleForModal(null)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
                 >
                   Close
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     const v = selectedVehicleForModal;
                     setSelectedVehicleForModal(null);
                     onSelectVehicle(v);
                   }}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/25 active:scale-95"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/25 active:scale-95 cursor-pointer"
                 >
                   Book This Vehicle
                 </button>

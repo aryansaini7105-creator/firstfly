@@ -39,14 +39,14 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-bold mb-3">
-            <Calculator className="w-3.5 h-3.5" /> 100% Transparent Price Quotation
+            <Compass className="w-3.5 h-3.5" /> All-India Route Explorer & Vehicle Matching
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-            Compare Fares Across Every Vehicle
+            Explore Routes & Choose Your Vehicle
           </h2>
           <p className="mt-3 text-slate-400 text-sm sm:text-base">
             No surprise surge pricing. No driver cancellation drama. See exact distance, highway
-            toll estimates, and vehicle tariffs side-by-side.
+            details, and vehicle features tailored for your destination.
           </p>
         </div>
 
@@ -80,12 +80,12 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
         {activeTab === 'popular' ? (
           /* Popular Corridors Quick Buttons */
           <div className="mb-8">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
               {POPULAR_ROUTES.map((route) => (
                 <button
                   key={route.id}
                   onClick={() => handleRoutePresetClick(route)}
-                  className={`p-3 rounded-2xl border text-left transition-all ${
+                  className={`p-3 rounded-2xl border text-left transition-all cursor-pointer active:scale-95 ${
                     selectedRouteId === route.id
                       ? 'bg-amber-500/15 border-amber-500 text-white shadow-lg shadow-amber-500/10'
                       : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900'
@@ -113,7 +113,7 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
                     {activeRoute.from} to {activeRoute.to} ({activeRoute.category})
                   </p>
                   <p className="text-slate-400 text-xs">
-                    Highway: <span className="text-slate-300 font-medium">{activeRoute.highwayName}</span> • Toll Estimate: <span className="text-amber-400 font-medium">₹{activeRoute.tollEstimate}</span>
+                    Highway: <span className="text-slate-300 font-medium">{activeRoute.highwayName}</span> • Toll & Taxes: <span className="text-emerald-400 font-medium">All-Inclusive Transparent Quote</span>
                   </p>
                 </div>
               </div>
@@ -231,30 +231,28 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
                     </div>
                   </div>
 
-                  {/* Price Breakdown Matrix */}
+                  {/* Specifications & Inclusions */}
                   <div className="space-y-2 py-3 border-y border-slate-800/80 text-xs text-slate-300">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Tariff Rate:</span>
-                      <span className="font-semibold text-white">₹{vehicle.pricePerKm} / km</span>
+                      <span className="text-slate-400">Passenger Capacity:</span>
+                      <span className="font-semibold text-white">{vehicle.seats} Seats</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">
-                        Base Fare ({totalBilledKm} km):
-                      </span>
+                      <span className="text-slate-400">Baggage Space:</span>
                       <span className="font-semibold text-white">
-                        ₹{baseFare.toLocaleString('en-IN')}
+                        {vehicle.luggageBags} Large Bags
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Driver Allowance:</span>
+                      <span className="text-slate-400">Chauffeur:</span>
                       <span className="font-semibold text-emerald-400">
-                        ₹{driverAllowance} (Included)
+                        Included (Verified)
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Est. Toll Taxes:</span>
-                      <span className="font-semibold text-slate-300">
-                        ~₹{tollEstimate}
+                      <span className="text-slate-400">Highway Permit:</span>
+                      <span className="font-semibold text-amber-300">
+                        All-India Commercial
                       </span>
                     </div>
                   </div>
@@ -262,13 +260,16 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
 
                 <div className="mt-5 pt-3">
                   <div className="flex items-baseline justify-between mb-3">
-                    <span className="text-xs uppercase font-bold text-slate-400">Total Approx:</span>
-                    <span className="text-2xl font-black text-amber-400 font-heading">
-                      ₹{totalEstimatedPrice.toLocaleString('en-IN')}
+                    <span className="text-xs uppercase font-bold text-emerald-400 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Best Deal Guarantee
+                    </span>
+                    <span className="text-xs font-bold text-slate-300">
+                      Custom Quote on Inquiry
                     </span>
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => {
                       if (activeTab === 'popular') {
                         onSelectRoute(activeRoute.from, activeRoute.to, vehicle.id);
@@ -276,9 +277,9 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
                         onSelectRoute('Custom Origin', 'Custom Destination', vehicle.id);
                       }
                     }}
-                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/20 active:scale-95 flex items-center justify-center gap-1.5"
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/20 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <span>Book {vehicle.name}</span>
+                    <span>Inquire {vehicle.name}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
                   </button>
                 </div>

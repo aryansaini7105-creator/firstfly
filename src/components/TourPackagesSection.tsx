@@ -45,8 +45,7 @@ export const TourPackagesSection: React.FC<TourPackagesSectionProps> = ({ onBook
   const handleWhatsAppPackage = (pkg: TourPackage) => {
     const text = `Hello FirstFly! I am interested in booking the *${pkg.title}* (${pkg.duration}) for destination *${pkg.destination}*.
 • Recommended Vehicle: ${pkg.recommendedVehicle}
-• Package Fare: ₹${pkg.pricePerVehicle.toLocaleString('en-IN')}
-Please share driver availability and confirm booking.`;
+Please share driver availability and customized best fare.`;
     window.open(`https://wa.me/${COMPANY_DETAILS.cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -93,6 +92,8 @@ Please share driver availability and confirm booking.`;
         <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/90 rounded-2xl border border-slate-800 mb-8 inline-flex">
           {[
             { id: 'all', label: 'All Packages' },
+            { id: 'south', label: 'South India & Goa' },
+            { id: 'airports', label: 'Delhi & Hub Airports' },
             { id: 'hills', label: 'Snow & Hills' },
             { id: 'pilgrimage', label: 'Spiritual / Darshan' },
             { id: 'heritage', label: 'Royal Heritage' },
@@ -100,7 +101,7 @@ Please share driver availability and confirm booking.`;
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 selectedCategory === cat.id
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
@@ -142,12 +143,16 @@ Please share driver availability and confirm booking.`;
                 >
                   <div>
                     {/* Package Hero Image with 100% reliable local fallback */}
-                    <div className="relative h-56 overflow-hidden bg-slate-950">
+                    <div
+                      onClick={() => toggleExpand(pkg.id)}
+                      className="relative h-56 overflow-hidden bg-slate-950 cursor-pointer group/img"
+                      title="Click to view itinerary & details"
+                    >
                       <img
                         src={pkg.image}
                         alt={pkg.title}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/hero/hero-bg.jpeg';
                         }}
@@ -175,7 +180,12 @@ Please share driver availability and confirm booking.`;
 
                     {/* Card Content */}
                     <div className="p-5 sm:p-6">
-                      <h3 className="text-xl font-bold text-white font-heading">{pkg.title}</h3>
+                      <h3
+                        onClick={() => toggleExpand(pkg.id)}
+                        className="text-xl font-bold text-white font-heading cursor-pointer hover:text-amber-400 transition-colors"
+                      >
+                        {pkg.title}
+                      </h3>
                       <p className="text-xs text-amber-400/90 font-medium mt-1">
                         Vehicle: {pkg.recommendedVehicle}
                       </p>
@@ -236,26 +246,30 @@ Please share driver availability and confirm booking.`;
                   {/* Footer Pricing & CTA */}
                   <div className="p-5 sm:p-6 pt-0 border-t border-slate-800/80 mt-4 flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400">Complete Cab Package</span>
-                      <p className="text-2xl font-black text-amber-400 font-heading">
-                        ₹{pkg.pricePerVehicle.toLocaleString('en-IN')}
+                      <span className="text-[10px] uppercase font-bold text-emerald-400 flex items-center gap-1">
+                        <Check className="w-3 h-3" /> All-Inclusive Package
+                      </span>
+                      <p className="text-sm font-black text-white font-heading">
+                        Best Rate on Inquiry
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         onClick={() => handleWhatsAppPackage(pkg)}
-                        className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-md active:scale-95"
+                        className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-md active:scale-95 cursor-pointer"
                         title="Inquire via WhatsApp"
                       >
                         <MessageSquare className="w-4 h-4" />
                       </button>
 
                       <button
+                        type="button"
                         onClick={() => onBookPackage(pkg)}
-                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs hover:from-amber-400 hover:to-amber-500 transition-all shadow-md active:scale-95 flex items-center gap-1"
+                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs hover:from-amber-400 hover:to-amber-500 transition-all shadow-md active:scale-95 flex items-center gap-1 cursor-pointer"
                       >
-                        <span>Book Tour</span>
+                        <span>Inquire Tour</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>

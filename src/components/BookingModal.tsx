@@ -167,7 +167,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 • Route: ${pickup} ➔ ${drop} (${tripType.toUpperCase()})
 • Date: ${travelDate}${returnDate ? ` (Return: ${returnDate})` : ''}
 • Vehicle: ${selectedVehicle.name} (${selectedVehicle.seats} Seater)
-• Approx Fare: ₹${totalEstimatedPrice.toLocaleString('en-IN')}
+• Fare Policy: Best Rate Guarantee (Zero Surge)
 • Distance: ~${effectiveKm} km
 Please confirm driver assignment and vehicle registration.`;
 
@@ -247,14 +247,14 @@ Please confirm driver assignment and vehicle registration.`;
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-slate-300 font-semibold block mb-1">
-                  Pickup City / Address
+                  Pickup City / Airport
                 </label>
                 <input
                   type="text"
                   list={pickupId}
                   value={pickup}
                   onChange={(e) => setPickup(e.target.value)}
-                  placeholder="e.g. Chandigarh, Delhi..."
+                  placeholder="e.g. Delhi IGI Airport, Chandigarh..."
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-amber-400"
                 />
                 <datalist id={pickupId}>
@@ -262,18 +262,31 @@ Please confirm driver assignment and vehicle registration.`;
                     <option key={c} value={c} />
                   ))}
                 </datalist>
+                <div className="flex items-center gap-1 mt-1.5 overflow-x-auto scrollbar-none text-[10px]">
+                  <span className="text-slate-500 shrink-0">Quick:</span>
+                  {['Delhi IGI Airport (T3/T1/T2)', 'Chandigarh / Mohali / Panchkula', 'Bangalore (Kempegowda Airport BLR / City)', 'Kochi (Cochin Airport COK)'].map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setPickup(c)}
+                      className="px-1.5 py-0.5 rounded bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-amber-400 border border-slate-800 whitespace-nowrap cursor-pointer"
+                    >
+                      {c.split(' (')[0]}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div>
                 <label className="text-slate-300 font-semibold block mb-1">
-                  Drop Destination
+                  Drop Destination / Tourist Place
                 </label>
                 <input
                   type="text"
                   list={dropId}
                   value={drop}
                   onChange={(e) => setDrop(e.target.value)}
-                  placeholder="e.g. Manali, Shimla..."
+                  placeholder="e.g. Manali, Coorg, Munnar, Goa..."
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-amber-400"
                 />
                 <datalist id={dropId}>
@@ -281,6 +294,19 @@ Please confirm driver assignment and vehicle registration.`;
                     <option key={c} value={c} />
                   ))}
                 </datalist>
+                <div className="flex items-center gap-1 mt-1.5 overflow-x-auto scrollbar-none text-[10px]">
+                  <span className="text-slate-500 shrink-0">Popular:</span>
+                  {['Manali / Solang Valley / Rohtang', 'Coorg (Madikeri / Abbey Falls)', 'Munnar (Tea Hills & Eravikulam)', 'Goa (MOPA / Dabolim Airport & Beaches)', 'Ayodhya (Shri Ram Janmabhoomi Mandir)', 'Tirupati Balaji (Sri Venkateswara)', 'Shimla / Kufri / Mashobra'].map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setDrop(c)}
+                      className="px-1.5 py-0.5 rounded bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-amber-400 border border-slate-800 whitespace-nowrap cursor-pointer"
+                    >
+                      {c.split(' (')[0]}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -336,7 +362,7 @@ Please confirm driver assignment and vehicle registration.`;
                     key={v.id}
                     type="button"
                     onClick={() => setSelectedVehicleId(v.id)}
-                    className={`p-3 rounded-2xl border text-left flex items-center justify-between transition-all ${
+                    className={`p-3 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                       selectedVehicleId === v.id
                         ? 'bg-amber-500/15 border-amber-500 text-white'
                         : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
@@ -344,8 +370,8 @@ Please confirm driver assignment and vehicle registration.`;
                   >
                     <div>
                       <p className="font-bold text-xs">{v.name}</p>
-                      <p className="text-[10px] text-slate-400">
-                        {v.seats} Seats • ₹{v.pricePerKm}/km
+                      <p className="text-[10px] text-emerald-400 font-medium">
+                        {v.seats} Seats • AC Commercial Yellow Plate
                       </p>
                     </div>
                     <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-slate-700">
@@ -356,20 +382,20 @@ Please confirm driver assignment and vehicle registration.`;
               </div>
             </div>
 
-            {/* Fare Estimate Box */}
+            {/* Fare Policy Box */}
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-[11px]">
                   Estimated Distance: <strong className="text-white">{effectiveKm} km</strong> (~{durationHours} hrs)
                 </p>
-                <p className="text-slate-400 text-[11px] mt-0.5">
-                  Includes driver allowance & fuel. Toll taxes at actuals.
+                <p className="text-emerald-400 text-[11px] mt-0.5 font-medium">
+                  ✓ Verified Chauffeur & Sanitized Cab • Zero Surge Charges
                 </p>
               </div>
               <div className="text-right">
-                <span className="text-[10px] uppercase font-bold text-slate-400">Estimated Total</span>
-                <p className="text-2xl font-black text-amber-400 font-heading">
-                  ₹{totalEstimatedPrice.toLocaleString('en-IN')}
+                <span className="text-[10px] uppercase font-bold text-emerald-400">Guaranteed Fare</span>
+                <p className="text-sm font-black text-amber-400 font-heading">
+                  Custom Quote on Demand
                 </p>
               </div>
             </div>
@@ -472,9 +498,9 @@ Please confirm driver assignment and vehicle registration.`;
                 <strong className="text-white">{travelDate}</strong>
               </div>
               <div className="flex justify-between pt-1 border-t border-slate-800">
-                <span className="text-slate-400">Estimated Total:</span>
-                <strong className="text-lg font-black text-amber-400">
-                  ₹{totalEstimatedPrice.toLocaleString('en-IN')}
+                <span className="text-slate-400">Pricing Policy:</span>
+                <strong className="text-sm font-black text-emerald-400">
+                  Guaranteed Lowest Fare • Zero Hidden Charges
                 </strong>
               </div>
             </div>
@@ -548,9 +574,9 @@ Please confirm driver assignment and vehicle registration.`;
                 <span className="font-semibold text-emerald-400">Commercial Yellow Plate</span>
               </div>
               <div className="flex justify-between pt-2 border-t border-slate-800 text-sm">
-                <span className="text-slate-400">Estimated Total Tariff:</span>
-                <span className="font-black text-amber-400 font-heading">
-                  ₹{totalEstimatedPrice.toLocaleString('en-IN')}
+                <span className="text-slate-400">Pricing Policy:</span>
+                <span className="font-black text-emerald-400 font-heading">
+                  Best Price Guaranteed (Custom Quote on Inquiry)
                 </span>
               </div>
             </div>

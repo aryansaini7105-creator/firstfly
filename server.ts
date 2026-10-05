@@ -72,31 +72,39 @@ if (process.env.GEMINI_API_KEY) {
 function generateSmartFallback(query: string): string {
   const q = query.toLowerCase();
 
+  if (q.includes('kerala') || q.includes('munnar') || q.includes('alleppey') || q.includes('cochin') || q.includes('varkala')) {
+    return `🌴 **Kerala & God's Own Country Touring:**\n- **Popular Routes:** Cochin Airport ➔ Munnar (~125 km, 3.5 hrs), Cochin ➔ Alleppey Houseboats (~85 km, 2.2 hrs), Trivandrum ➔ Varkala Cliff (~45 km).\n- **Recommended Vehicles:** Toyota Innova Crysta or Maruti Ertiga with dual AC and Western Ghats certified drivers.\n- **Sightseeing:** Eravikulam National Park, tea estate trails, Cheeyappara waterfalls, Vembanad backwater houseboats.\n- **Tariff:** Guaranteed lowest custom package quotation on request with zero surge.\n\nConnect with our 24/7 desk on WhatsApp or call **+91 98771 24650** for vehicle availability!`;
+  }
+
+  if (q.includes('bangalore') || q.includes('coorg') || q.includes('ooty') || q.includes('tirupati') || q.includes('south')) {
+    return `☕ **South India & Western Ghats Corridors:**\n- **Key Corridors:** Bangalore Kempegowda Airport (BLR) ➔ Coorg / Madikeri (~250 km, 5.5 hrs), Bangalore ➔ Tirupati Balaji sacred darshan (~250 km, 5 hrs), Bangalore ➔ Ooty (~275 km).\n- **Fleet Available:** Toyota Innova Crysta, Maruti Ertiga, Force Urbania 17-Seater.\n- **Perks:** Inter-state permit clearance, clean sanitized cabins, courteous chauffeurs.\n\nCall **+91 98771 24650** or WhatsApp to get an instant customized quote!`;
+  }
+
   if (q.includes('manali') || q.includes('kullu')) {
-    return `🏔️ **Trip to Manali:**\n- **Route:** Chandigarh → Manali (~280 km, 7-8 hrs via Kiratpur-Nerchowk 4-lane expressway) or Delhi → Manali (~530 km, 11-12 hrs).\n- **Recommended Vehicles:** Toyota Innova Crysta (7-seater, ₹16/km) or Maruti Ertiga (7-seater, ₹12/km) for optimal hill comfort and power.\n- **Sightseeing:** Solang Valley, Rohtang Pass, Old Manali, Atal Tunnel, Manikaran.\n- **All Inclusive:** Driver allowance, hill driving permit & commercial insurance included. Tolls & green tax at actuals.\n\nReady to book? Tap "Book via WhatsApp" or call **+91 98771 24650** for instant driver assignment!`;
+    return `🏔️ **Trip to Manali & Solang Valley:**\n- **Route:** Chandigarh → Manali (~280 km, 7-8 hrs via Kiratpur-Nerchowk 4-lane expressway) or Delhi → Manali (~530 km, 11-12 hrs).\n- **Recommended Vehicles:** Toyota Innova Crysta or Maruti Ertiga for optimal mountain comfort and hill traction.\n- **Sightseeing:** Solang Valley, Rohtang Pass, Old Manali, Atal Tunnel, Manikaran.\n- **Inclusions:** Hill-certified chauffeur, snow chains, all-India commercial tourist permit.\n\nReady to book? Tap "Book via WhatsApp" or call **+91 98771 24650** for custom quote & vehicle assignment!`;
   }
 
   if (q.includes('shimla') || q.includes('kufri')) {
-    return `🌲 **Trip to Shimla:**\n- **Distance:** Chandigarh → Shimla is ~115 km (~3.5 hrs via Himalayan Expressway); Delhi → Shimla is ~350 km (~7 hrs).\n- **Top Cabs:** Maruti Ertiga (₹12/km), Innova Crysta (₹16/km), or Dzire Sedan (₹10.5/km).\n- **Highlights:** Mall Road, Ridge, Jakhu Temple, Kufri Snow View, Chail.\n- **Driver:** Experienced hill chauffeur provided with 24/7 support. Call **+91 98771 24650** for a custom quote!`;
+    return `🌲 **Trip to Shimla & Kufri:**\n- **Distance:** Chandigarh → Shimla is ~115 km (~3.5 hrs via Himalayan Expressway); Delhi → Shimla is ~350 km (~7 hrs).\n- **Top Cabs:** Maruti Ertiga, Toyota Innova Crysta, or Sedan.\n- **Highlights:** Mall Road, Ridge, Jakhu Temple, Kufri Snow View, Chail.\n- **Driver:** Experienced hill chauffeur provided with 24/7 support. Call **+91 98771 24650** for a custom quote!`;
   }
 
   if (q.includes('urbania') || q.includes('traveller') || q.includes('17') || q.includes('12') || q.includes('group')) {
-    return `🚐 **FirstFly Luxury Traveller Fleet:**\n- **Force Urbania (17-Seater):** Ultra-luxury pushback leather seats, individual AC vents, ambient LED ceiling, huge luggage boot, smart music system. (From ₹26/km).\n- **Force Traveller (12/16-Seater):** High roof, spacious legroom, carrier for 15+ bags, perfect for joint families, corporate retreats & wedding groups. (From ₹22/km).\n\nCall our fleet manager directly at **+91 98771 24650** to check date availability!`;
+    return `🚐 **FirstFly Luxury Traveller Fleet:**\n- **Force Urbania (17-Seater):** Ultra-luxury pushback leather seats, individual AC vents, ambient LED ceiling, huge luggage boot, smart music system.\n- **Force Traveller (12/16-Seater):** High roof, spacious legroom, carrier for 15+ bags, perfect for joint families, corporate retreats & wedding groups.\n\nCall our fleet manager directly at **+91 98771 24650** to check date availability and flat custom pricing!`;
   }
 
   if (q.includes('price') || q.includes('rate') || q.includes('cost') || q.includes('fare') || q.includes('km')) {
-    return `💰 **FirstFly Transparent Tariff Sheet:**\n- **Maruti Dzire / Etios Sedan:** ₹10.50 – ₹11/km (Min 250 km/day for outstation)\n- **Maruti Ertiga (7-Seater MUV):** ₹12 – ₹13/km\n- **Toyota Innova Crysta (7-Seater Luxury SUV):** ₹16 – ₹18/km\n- **Force Traveller (12-Seater):** ₹22/km\n- **Force Urbania (17-Seater Luxury):** ₹26/km\n\n✅ 100% Commercial Yellow Plate Fleet\n✅ Zero Hidden Surge Charges\n✅ Toll taxes & state permits at actuals with authentic receipts.\nNeed a fixed flat price for your route? Send your pickup and drop city!`;
+    return `📋 **FirstFly Tariff & Pricing Policy:**\nWe provide 100% transparent, personalized flat quotations based on your exact route, dates, and vehicle category with **No Hidden Charges**:\n- **Sedan (Maruti Dzire / Etios):** 4 Passengers + Boot\n- **MUV (Maruti Ertiga Hybrid):** 6 Passengers\n- **Luxury SUV (Toyota Innova Crysta):** 6-7 Passengers\n- **Group Vans (Force Urbania 17-Seater & Traveller):** 12-17 Passengers\n\n✅ 100% Commercial Yellow Plate Fleet\n✅ Zero Surge Pricing\n✅ Toll taxes & state permits at actuals with authentic receipts.\nTell us your pickup & drop destination to receive a custom guaranteed lowest quote immediately!`;
   }
 
-  if (q.includes('airport') || q.includes('delhi') || q.includes('igi') || q.includes('chandigarh')) {
-    return `✈️ **Airport Pickup & Outstation Drop:**\nWe provide punctual, 24/7 guaranteed airport transfers to and from:\n- IGI Airport Delhi (T1, T2, T3)\n- Shaheed Bhagat Singh Int'l Airport Chandigarh (IXC)\n- Sri Guru Ram Dass Jee Int'l Airport Amritsar (ATQ)\n\nFlight tracking included: Our driver arrives 15 mins prior with a name placard and assists with heavy luggage. Call **+91 98771 24650** to schedule pickup!`;
+  if (q.includes('airport') || q.includes('delhi') || q.includes('igi') || q.includes('chandigarh') || q.includes('cochin') || q.includes('bangalore')) {
+    return `✈️ **24/7 Airport Pickup & Outstation Drop:**\nGuaranteed on-time transfers with live flight tracking across:\n- Delhi IGI Airport (Terminals 1, 2 & 3)\n- Bangalore Kempegowda Int'l Airport (BLR)\n- Cochin International Airport (COK)\n- Chandigarh Shaheed Bhagat Singh Int'l (IXC)\n- Goa MOPA & Dabolim Airports\n\nFlight tracking included: Driver arrives 15 mins prior with a name placard and assists with heavy luggage. Call **+91 98771 24650** to schedule pickup!`;
   }
 
   if (q.includes('safe') || q.includes('hack') || q.includes('security') || q.includes('verified')) {
-    return `🛡️ **FirstFly Safety & Security Promise:**\n- **Vehicle Integrity:** 100% verified commercial yellow-plate cars with All-India Tourist Permits & speed governors.\n- **Driver Verification:** Police background-checked, uniformed, non-smoking professional chauffeurs.\n- **Digital Safety:** 256-bit SSL encrypted booking system with zero unauthorized access.\n- **Passenger Helpline:** 24/7 SOS dispatch and live GPS tracking link shared directly with family.`;
+    return `🛡️ **FirstFly Safety & Security Promise:**\n- **Vehicle Integrity:** 100% verified commercial yellow-plate cars with All-India Tourist Permits & speed governors.\n- **Driver Verification:** Police background-checked, uniformed, professional chauffeurs.\n- **Digital Safety:** 256-bit SSL encrypted booking system with zero unauthorized access.\n- **Passenger Helpline:** 24/7 SOS dispatch and live GPS tracking link shared directly with family.`;
   }
 
-  return `👋 Namaste! Welcome to **FirstFly Tours & Travels** — your trusted All-India travel partner.\n\nWe provide verified **Toyota Innova Crysta, Maruti Ertiga, Force Urbania (17-Seater), Force Traveller & Sedans** for outstation, hill stations, family tours, and airport drops across India.\n\nHow can I help you today? You can mention:\n1. Your pickup & drop destination (e.g. "Delhi to Manali")\n2. Vehicle preference & number of passengers\n3. Dates of travel\n\nOr connect with our 24/7 dispatch desk on WhatsApp or call **+91 98771 24650**!`;
+  return `👋 Namaste! Welcome to **FirstFly Tours & Travels** — your trusted All-India travel partner.\n\nWe provide verified **Toyota Innova Crysta, Maruti Ertiga, Force Urbania (17-Seater), Force Traveller & Sedans** for outstation, hill stations, family tours, Kerala routes, and airport drops across India.\n\nHow can I help you today? You can mention:\n1. Your pickup & drop destination (e.g. "Delhi Airport to Agra", "Cochin to Munnar")\n2. Vehicle preference & number of passengers\n3. Dates of travel\n\nOr connect with our 24/7 dispatch desk on WhatsApp or call **+91 98771 24650**!`;
 }
 
 // ═══ API ENDPOINTS ═══
@@ -134,17 +142,18 @@ app.post('/api/chat', rateLimit(30, 60000), async (req, res) => {
     if (aiClient) {
       try {
         const systemPrompt = `You are the official 24/7 AI Travel Concierge for FirstFly Tours & Travels (firstfly.in).
-Headquarters & Primary Hubs: Chandigarh, Mohali, Punjab, Delhi NCR, Himachal Pradesh, Uttarakhand, and All India.
+Primary Hubs: Delhi IGI Airport, Bangalore BLR Airport, Cochin COK Airport, Goa, Chandigarh, Mohali, Punjab, Delhi NCR, Himachal Pradesh, Uttarakhand, Kerala, and All India.
 Owner & 24/7 Dispatch Desk: +91 98771 24650 | Email: hsingh67243@gmail.com.
 Fleet:
-1. Toyota Innova Crysta (7/8 Seats SUV, ₹16/km, VIP luxury captain seats, high ground clearance, hill master)
-2. Maruti Suzuki Ertiga (7 Seats MUV, ₹12/km, comfortable, economical, clean cabin)
-3. Force Urbania Traveller (17 Seats Super-Luxury, ₹26/km, pushback recliners, dual AC, mood lighting, high-end touring)
-4. Force Traveller (12/16 Seats Group Van, ₹22/km, high roof, luggage carrier)
-5. Maruti Suzuki Dzire & Toyota Etios (5 Seats Sedan, ₹10.5 - ₹11/km, economical outstation)
-Services: One-way drops, round trips, holiday packages (Manali, Shimla, Rishikesh, Kashmir, Golden Triangle, Char Dham, Amritsar), airport transfers (Delhi IGI, Chandigarh, Amritsar).
-Assurances: 100% commercial yellow plates, verified drivers, live GPS tracking, zero hidden charges, 24/7 helpline.
-Answer warmly, professionally, and concisely in clean markdown with bullet points. Provide realistic travel times, distances, vehicle suggestions, and quote estimates in INR. Always mention customer can book instantly via WhatsApp or call +91 98771 24650.`;
+1. Toyota Innova Crysta (7/8 Seats Luxury SUV, VIP luxury captain seats, high ground clearance, hill & highway master)
+2. Maruti Suzuki Ertiga Hybrid (7 Seats MUV, comfortable, economical, clean cabin)
+3. Force Urbania Traveller (17 Seats Super-Luxury, pushback recliners, dual AC, mood lighting, high-end touring)
+4. Force Traveller (12/16 Seats Group Van, high roof, luggage carrier)
+5. Maruti Suzuki Dzire & Sedans (5 Seats Sedan, economical outstation)
+Services: Airport transfers (Delhi IGI, Bangalore BLR, Cochin COK, Goa MOPA), Kerala tours (Munnar, Alleppey, Thekkady, Varkala), Hill stations (Manali, Shimla, Rishikesh, Mussoorie), Heritage circuits (Golden Triangle, Jaipur, Agra, Ayodhya, Varanasi).
+Pricing Policy: Customized flat best-deal quotes provided on inquiry without hidden charges or surge. Do NOT give arbitrary numeric rupee figures; explain that transparent flat quotes are customized according to route distance and days, and encourage customer to connect via WhatsApp or call for immediate driver allocation.
+Assurances: 100% commercial yellow plates, police-verified chauffeurs, live GPS tracking, 24/7 helpline.
+Answer warmly, professionally, and concisely in clean markdown with bullet points. Always mention customer can book instantly via WhatsApp or call +91 98771 24650.`;
 
         const response = await aiClient.models.generateContent({
           model: 'gemini-2.5-flash',

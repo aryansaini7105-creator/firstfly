@@ -39,7 +39,7 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
     {
       id: 'welcome-1',
       sender: 'bot',
-      text: `👋 **Namaste & Welcome to FirstFly Tours & Travels!**\n\nI am your 24/7 AI Travel Concierge. I can help you with:\n• Instant distance & fare calculations across India\n• Recommending the best vehicle (Innova Crysta, Ertiga, Urbania 17-Seater, Travellers)\n• Sightseeing itineraries for Manali, Shimla, Rishikesh & Golden Triangle\n\nHow can I help plan your trip today?`,
+      text: `👋 **Namaste & Welcome to FirstFly Tours & Travels!**\n\nI am your 24/7 AI Travel Concierge. I can assist you with:\n• Airport transfers (Delhi IGI, Bangalore BLR, Cochin COK, Goa MOPA)\n• Kerala tours (Munnar tea hills, Alleppey backwaters, Varkala cliff)\n• Himalayan hill stations (Manali, Shimla, Rishikesh, Mussoorie)\n• Fleet assignment (Toyota Innova Crysta, Ertiga Hybrid, Force Urbania 17-Seater)\n\nWhere would you like to travel today?`,
       timestamp: 'Just now',
     },
   ]);
@@ -246,11 +246,12 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
         <div className="px-4 py-2 bg-slate-950 border-t border-slate-800/80 flex items-center gap-1.5 overflow-x-auto text-[11px] scrollbar-none">
           <span className="text-slate-500 font-semibold shrink-0">Quick Ask:</span>
           {[
-            'Quote: Delhi to Manali',
-            'Innova Crysta Price/km',
-            'Urbania 17-Seater',
-            'Airport Pickup IGI',
-            'Toll & Driver Charges',
+            'Delhi Airport to Agra/Jaipur',
+            'Kerala Munnar & Backwaters',
+            'Innova Crysta Availability',
+            'Force Urbania 17-Seater',
+            'Bangalore Airport to Coorg',
+            'All-India Permit & Safety',
           ].map((chip, idx) => (
             <button
               key={idx}

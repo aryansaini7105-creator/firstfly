@@ -207,15 +207,15 @@ Please send driver assignment and final confirmation.`;
                 ))}
               </datalist>
               <div className="flex items-center gap-1 mt-1.5 overflow-x-auto scrollbar-none text-[10px]">
-                <span className="text-slate-500">Quick:</span>
-                {['Chandigarh', 'Delhi NCR', 'Mohali'].map((city) => (
+                <span className="text-slate-500 shrink-0">Quick:</span>
+                {['Delhi IGI Airport (T3/T1/T2)', 'Chandigarh / Mohali / Panchkula', 'Bangalore (Kempegowda Airport BLR / City)', 'Kochi (Cochin Airport COK)', 'Mumbai (CSMIA Airport BOM)'].map((city) => (
                   <button
                     key={city}
                     type="button"
                     onClick={() => setPickup(city)}
-                    className="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-400 border border-slate-800 transition-colors whitespace-nowrap"
+                    className="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-400 border border-slate-800 transition-colors whitespace-nowrap cursor-pointer active:scale-95"
                   >
-                    {city}
+                    {city.split(' (')[0]}
                   </button>
                 ))}
               </div>
@@ -226,7 +226,7 @@ Please send driver assignment and final confirmation.`;
               <button
                 type="button"
                 onClick={handleSwapCities}
-                className="p-2.5 rounded-full bg-slate-800 text-amber-400 hover:bg-slate-700 hover:text-white border border-slate-700 shadow-md transition-all active:scale-95"
+                className="p-2.5 rounded-full bg-slate-800 text-amber-400 hover:bg-slate-700 hover:text-white border border-slate-700 shadow-md transition-all active:scale-95 cursor-pointer"
                 title="Swap Locations"
               >
                 <Navigation className="w-4 h-4 rotate-90" />
@@ -253,15 +253,15 @@ Please send driver assignment and final confirmation.`;
                 ))}
               </datalist>
               <div className="flex items-center gap-1 mt-1.5 overflow-x-auto scrollbar-none text-[10px]">
-                <span className="text-slate-500">Quick:</span>
-                {['Manali', 'Shimla', 'Rishikesh', 'Jaipur', 'Amritsar'].map((city) => (
+                <span className="text-slate-500 shrink-0">Popular:</span>
+                {['Manali / Solang Valley / Rohtang', 'Coorg (Madikeri / Abbey Falls)', 'Munnar (Tea Hills & Eravikulam)', 'Goa (MOPA / Dabolim Airport & Beaches)', 'Ayodhya (Shri Ram Janmabhoomi Mandir)', 'Tirupati Balaji (Sri Venkateswara)', 'Jaipur (Pink City / Amer Fort)', 'Agra (Taj Mahal & Fatehpur Sikri)'].map((city) => (
                   <button
                     key={city}
                     type="button"
                     onClick={() => setDrop(city)}
-                    className="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-400 border border-slate-800 transition-colors whitespace-nowrap"
+                    className="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-400 border border-slate-800 transition-colors whitespace-nowrap cursor-pointer active:scale-95"
                   >
-                    {city}
+                    {city.split(' (')[0]}
                   </button>
                 ))}
               </div>
@@ -292,17 +292,17 @@ Please send driver assignment and final confirmation.`;
                   <Car className="w-3.5 h-3.5 text-sky-400" /> Select Vehicle
                 </span>
                 <span className="text-[10px] text-amber-400 font-bold">
-                  {selectedVehicle.seats} Seats • ₹{selectedVehicle.pricePerKm}/km
+                  {selectedVehicle.seats} Seats • Commercial AC Fleet
                 </span>
               </label>
               <select
                 value={selectedVehicleId}
                 onChange={(e) => setSelectedVehicleId(e.target.value)}
-                className="w-full bg-slate-900 text-sm font-bold text-white border border-slate-700/80 rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-400"
+                className="w-full bg-slate-900 text-sm font-bold text-white border border-slate-700/80 rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-400 cursor-pointer"
               >
                 {FLEET_DATA.map((v) => (
                   <option key={v.id} value={v.id}>
-                    {v.name} ({v.seats} Seater {v.category.toUpperCase()}) — ₹{v.pricePerKm}/km
+                    {v.name} ({v.seats} Seater {v.category.toUpperCase()}) — Best Deal on Inquiry
                   </option>
                 ))}
               </select>
@@ -328,40 +328,43 @@ Please send driver assignment and final confirmation.`;
               <div className="hidden sm:inline text-slate-700">|</div>
               <div className="flex items-center gap-1.5 text-emerald-400">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Driver Included</span>
+                <span>Driver & Fuel Included</span>
               </div>
             </div>
 
-            {/* Estimated Total Price & CTA */}
+            {/* Custom Quotation & Action Buttons */}
             <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
               <div className="text-left md:text-right">
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Estimated Total Fare
+                <p className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">
+                  Guaranteed Lowest Fare
                 </p>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl sm:text-3xl font-black text-amber-400 font-heading">
-                    ₹{totalEstimatedFare.toLocaleString('en-IN')}
-                  </span>
-                  <span className="text-[10px] text-slate-400">approx.</span>
+                <div className="text-sm sm:text-base font-black text-white font-heading">
+                  Custom Quote on Inquiry
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleWhatsAppQuickQuote}
-                  className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-md shadow-emerald-600/20 active:scale-95"
+                <a
+                  href={`https://wa.me/${COMPANY_DETAILS.cleanPhone}?text=${encodeURIComponent(
+                    `Hello FirstFly! I need a cab quotation:\n• Route: ${pickup} ➔ ${drop}\n• Trip Type: ${
+                      tripType === 'one-way' ? 'One-Way Outstation' : tripType === 'round-trip' ? 'Round-Trip' : 'Airport / Local'
+                    }\n• Date: ${travelDate}\n• Vehicle: ${selectedVehicle.name} (${selectedVehicle.seats} Seater)\n• Distance: ~${effectiveKm} km\nPlease share driver availability and best fare.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-md shadow-emerald-600/20 active:scale-95 flex items-center gap-1.5 text-xs whitespace-nowrap cursor-pointer"
                   title="Direct WhatsApp Quote"
                 >
-                  <MessageSquare className="w-5 h-5" />
-                </button>
+                  <MessageSquare className="w-4 h-4" />
+                  <span className="hidden sm:inline">WhatsApp Quote</span>
+                </a>
 
                 <button
                   type="button"
                   onClick={handleBookNow}
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-sm hover:from-amber-400 hover:to-amber-500 transition-all shadow-lg shadow-amber-500/25 active:scale-95 flex items-center gap-2 whitespace-nowrap"
+                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs sm:text-sm hover:from-amber-400 hover:to-amber-500 transition-all shadow-lg shadow-amber-500/25 active:scale-95 flex items-center gap-2 whitespace-nowrap cursor-pointer"
                 >
-                  <span>Confirm Booking</span>
+                  <span>Book / Request Call</span>
                   <ArrowRight className="w-4 h-4 text-slate-950" />
                 </button>
               </div>
@@ -370,24 +373,29 @@ Please send driver assignment and final confirmation.`;
 
           {/* Quick Route Suggestions */}
           <div className="mt-4 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-slate-400 font-medium">Popular Runs:</span>
+            <span className="text-slate-400 font-medium">Top Booked Routes:</span>
             {[
-              { from: 'Delhi NCR', to: 'Manali', v: 'innova-crysta' },
-              { from: 'Chandigarh', to: 'Shimla', v: 'ertiga-smart-hybrid' },
-              { from: 'Delhi NCR', to: 'Chandigarh', v: 'maruti-dzire' },
-              { from: 'Delhi NCR', to: 'Rishikesh', v: 'ertiga-smart-hybrid' },
-              { from: 'Chandigarh', to: 'Amritsar', v: 'innova-crysta' },
+              { from: 'Delhi IGI Airport (T3/T1/T2)', to: 'Chandigarh / Mohali / Panchkula', v: 'innova-crysta' },
+              { from: 'Delhi IGI Airport (T3/T1/T2)', to: 'Agra (Taj Mahal & Fatehpur Sikri)', v: 'innova-crysta' },
+              { from: 'Delhi NCR (New Delhi / Gurgaon / Noida)', to: 'Manali / Solang Valley / Rohtang', v: 'innova-crysta' },
+              { from: 'Bangalore (Kempegowda Airport BLR / City)', to: 'Coorg (Madikeri / Abbey Falls)', v: 'innova-crysta' },
+              { from: 'Bangalore (Kempegowda Airport BLR / City)', to: 'Tirupati Balaji (Sri Venkateswara)', v: 'innova-crysta' },
+              { from: 'Kochi (Cochin Airport COK)', to: 'Munnar (Tea Hills & Eravikulam)', v: 'ertiga-smart-hybrid' },
+              { from: 'Goa (MOPA / Dabolim Airport & Beaches)', to: 'North & South Goa Beaches', v: 'innova-crysta' },
+              { from: 'Delhi NCR (New Delhi / Gurgaon / Noida)', to: 'Ayodhya (Shri Ram Janmabhoomi Mandir)', v: 'innova-crysta' },
+              { from: 'Mumbai (CSMIA Airport BOM) / Pune', to: 'Shirdi (Sai Baba Samadhi Mandir)', v: 'ertiga-smart-hybrid' },
             ].map((p, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => {
                   setPickup(p.from);
                   setDrop(p.to);
                   setSelectedVehicleId(p.v);
                 }}
-                className="px-2.5 py-1 rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-300 hover:text-amber-300 transition-colors border border-slate-700/50"
+                className="px-2.5 py-1 rounded-lg bg-slate-800/70 hover:bg-slate-700 text-slate-300 hover:text-amber-300 transition-colors border border-slate-700/50 cursor-pointer active:scale-95"
               >
-                {p.from} ➔ {p.to}
+                {p.from.split(' (')[0]} ➔ {p.to.split(' (')[0]}
               </button>
             ))}
           </div>
@@ -395,51 +403,82 @@ Please send driver assignment and final confirmation.`;
 
         {/* User Authentic Car Showcase Highlight Strip */}
         <div className="mt-10 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="glass-panel p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800">
+          <button
+            type="button"
+            onClick={() => setSelectedVehicleId('innova-crysta')}
+            className={`glass-panel p-3.5 rounded-2xl flex items-center gap-3 border text-left transition-all cursor-pointer active:scale-95 ${
+              selectedVehicleId === 'innova-crysta'
+                ? 'border-amber-500 bg-amber-500/10 shadow-lg shadow-amber-500/15'
+                : 'border-slate-800 hover:border-slate-700'
+            }`}
+          >
             <img
               src="/vehicles/innova-0.jpeg"
               alt="Innova Crysta Yellow Plate"
-              className="w-12 h-12 rounded-xl object-cover border border-amber-500/30"
+              className="w-12 h-12 rounded-xl object-cover border border-amber-500/30 shrink-0"
             />
-            <div>
-              <p className="text-xs font-bold text-white">Toyota Innova Crysta</p>
-              <p className="text-[10px] text-amber-400 font-semibold">Reg: PB 01 B 0051</p>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-white truncate">Toyota Innova Crysta</p>
+              <p className="text-[10px] text-amber-400 font-semibold truncate">Reg: PB 01 B 0051</p>
+              <span className="text-[9px] text-slate-400">Tap to select</span>
             </div>
-          </div>
+          </button>
 
-          <div className="glass-panel p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800">
+          <button
+            type="button"
+            onClick={() => setSelectedVehicleId('ertiga-smart-hybrid')}
+            className={`glass-panel p-3.5 rounded-2xl flex items-center gap-3 border text-left transition-all cursor-pointer active:scale-95 ${
+              selectedVehicleId === 'ertiga-smart-hybrid'
+                ? 'border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-500/15'
+                : 'border-slate-800 hover:border-slate-700'
+            }`}
+          >
             <img
               src="/vehicles/ertiga-0.jpeg"
               alt="Maruti Ertiga Yellow Plate"
-              className="w-12 h-12 rounded-xl object-cover border border-emerald-500/30"
+              className="w-12 h-12 rounded-xl object-cover border border-emerald-500/30 shrink-0"
             />
-            <div>
-              <p className="text-xs font-bold text-white">Maruti Ertiga Hybrid</p>
-              <p className="text-[10px] text-emerald-400 font-semibold">Reg: PB 01 G 3601</p>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-white truncate">Maruti Ertiga Hybrid</p>
+              <p className="text-[10px] text-emerald-400 font-semibold truncate">Reg: PB 01 G 3601</p>
+              <span className="text-[9px] text-slate-400">Tap to select</span>
             </div>
-          </div>
+          </button>
 
-          <div className="glass-panel p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800">
+          <button
+            type="button"
+            onClick={() => setSelectedVehicleId('force-urbania-17')}
+            className={`glass-panel p-3.5 rounded-2xl flex items-center gap-3 border text-left transition-all cursor-pointer active:scale-95 ${
+              selectedVehicleId === 'force-urbania-17'
+                ? 'border-sky-500 bg-sky-500/10 shadow-lg shadow-sky-500/15'
+                : 'border-slate-800 hover:border-slate-700'
+            }`}
+          >
             <img
               src="/vehicles/urbania-0.jpeg"
               alt="Force Urbania 17 Seater"
-              className="w-12 h-12 rounded-xl object-cover border border-sky-500/30"
+              className="w-12 h-12 rounded-xl object-cover border border-sky-500/30 shrink-0"
             />
-            <div>
-              <p className="text-xs font-bold text-white">Force Urbania (17)</p>
-              <p className="text-[10px] text-sky-400 font-semibold">VIP Recliner Van</p>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-white truncate">Force Urbania (17)</p>
+              <p className="text-[10px] text-sky-400 font-semibold truncate">VIP Recliner Van</p>
+              <span className="text-[9px] text-slate-400">Tap to select</span>
             </div>
-          </div>
+          </button>
 
-          <div className="glass-panel p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-sm">
+          <a
+            href={`tel:${COMPANY_DETAILS.phone}`}
+            className="glass-panel p-3.5 rounded-2xl flex items-center gap-3 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900/80 transition-all cursor-pointer active:scale-95"
+          >
+            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-sm shrink-0">
               24/7
             </div>
-            <div>
-              <p className="text-xs font-bold text-white">24/7 Dispatch Desk</p>
-              <p className="text-[10px] text-slate-400 font-semibold">+91 98771 24650</p>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-white truncate">24/7 Dispatch Desk</p>
+              <p className="text-[10px] text-amber-400 font-semibold truncate">+91 98771 24650</p>
+              <span className="text-[9px] text-slate-400">Tap to call</span>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>

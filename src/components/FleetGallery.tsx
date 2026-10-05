@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Camera, X, ChevronLeft, ChevronRight, Eye, ShieldCheck, Sparkles } from 'lucide-react';
+import { Camera, X, ChevronLeft, ChevronRight, Eye, ShieldCheck, Sparkles, MessageSquare, Car, ArrowRight } from 'lucide-react';
+import { COMPANY_DETAILS } from '../data/travelData';
 
 interface GalleryItem {
   id: string;
@@ -10,7 +11,11 @@ interface GalleryItem {
   regBadge?: string;
 }
 
-export const FleetGallery: React.FC = () => {
+interface FleetGalleryProps {
+  onOpenBooking?: () => void;
+}
+
+export const FleetGallery: React.FC<FleetGalleryProps> = ({ onOpenBooking }) => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -228,6 +233,35 @@ export const FleetGallery: React.FC = () => {
               <p className="text-xs sm:text-sm text-slate-300 mt-1">
                 {filtered[lightboxIndex].caption}
               </p>
+
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <a
+                  href={`https://wa.me/${COMPANY_DETAILS.cleanPhone}?text=${encodeURIComponent(
+                    `Hello FirstFly! I am viewing your fleet photo: ${filtered[lightboxIndex].title}. Please share availability and best fare for this vehicle.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Inquire via WhatsApp</span>
+                </a>
+
+                {onOpenBooking && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeLightbox();
+                      onOpenBooking();
+                    }}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
+                  >
+                    <Car className="w-4 h-4 text-slate-950" />
+                    <span>Book This Vehicle</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

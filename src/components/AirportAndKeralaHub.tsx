@@ -95,7 +95,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
       to: 'Shirdi (Sai Baba Samadhi Mandir)',
       distance: '240 km',
       duration: '4.5 Hours',
-      image: '/tours/varanasi.jpg',
+      image: '/tours/shirdi.jpg',
       recommendedVehicle: 'Maruti Ertiga / Innova Crysta',
       tagline: 'CSMIA Terminal 2 pickup via new Samruddhi Expressway to holy shrine',
       highlights: ['Samruddhi Mahamarg superfast ride', 'Devotee-friendly courteous driver', 'Zero waiting stress'],
@@ -120,7 +120,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
       to: 'Alleppey (Alappuzha Houseboats & Backwaters)',
       distance: '85 km',
       duration: '2.2 Hours',
-      image: '/tours/munnar.jpg',
+      image: '/tours/alleppey.jpg',
       recommendedVehicle: 'Maruti Ertiga / Innova Crysta',
       tagline: 'Airport exit directly to luxury houseboat jetty boarding points on Vembanad Lake',
       highlights: ['Punctual flight tracking', 'Luggage transfer to boat', 'Coastal expressway route'],
@@ -153,7 +153,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
       to: 'Thekkady (Periyar Tiger Sanctuary & Spice Hills)',
       distance: '155 km',
       duration: '4.5 Hours',
-      image: '/tours/coorg.jpg',
+      image: '/tours/thekkady.jpg',
       recommendedVehicle: 'Toyota Innova Crysta',
       tagline: 'Cardamom hills & spice plantation trails to Periyar wildlife lake boating',
       highlights: ['Spice garden visits with driver guidance', 'Kottayam-Kumily ghat highway', 'Safe mountain driving'],
@@ -164,7 +164,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
       to: 'Kanyakumari (Sunrise Point & Rock Memorial)',
       distance: '90 km',
       duration: '2.5 Hours',
-      image: '/tours/varkala.jpg',
+      image: '/tours/kanyakumari.jpg',
       recommendedVehicle: 'Toyota Innova Crysta',
       tagline: 'Trip to India’s southernmost tip where Arabian Sea, Bay of Bengal and Indian Ocean converge',
       highlights: ['Interstate permit included', 'Vivekananda Rock ferry boarding', 'Sunrise & sunset viewpoints'],
@@ -306,6 +306,7 @@ Please share driver availability and customized best fare quote.`;
                     src={route.image}
                     alt={`${route.from} to ${route.to}`}
                     loading="lazy"
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/hero/hero-bg.jpeg';

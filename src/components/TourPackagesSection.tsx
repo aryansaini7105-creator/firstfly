@@ -152,6 +152,7 @@ Please share driver availability and customized best fare.`;
                         src={pkg.image}
                         alt={pkg.title}
                         loading="lazy"
+                        referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/hero/hero-bg.jpeg';

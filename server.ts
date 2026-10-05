@@ -156,7 +156,7 @@ Assurances: 100% commercial yellow plates, police-verified chauffeurs, live GPS 
 Answer warmly, professionally, and concisely in clean markdown with bullet points. Always mention customer can book instantly via WhatsApp or call +91 98771 24650.`;
 
         const response = await aiClient.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-3.8-flash',
           contents: [
             {
               role: 'user',

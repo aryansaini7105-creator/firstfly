@@ -226,6 +226,8 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
                       <img
                         src={vehicle.images[0]}
                         alt={vehicle.name}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                     </div>

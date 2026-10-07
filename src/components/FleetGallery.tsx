@@ -138,6 +138,7 @@ export const FleetGallery: React.FC<FleetGalleryProps> = ({ onOpenBooking }) => 
                 src={item.src}
                 alt={item.title}
                 loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
@@ -212,6 +213,7 @@ export const FleetGallery: React.FC<FleetGalleryProps> = ({ onOpenBooking }) => 
               <img
                 src={filtered[lightboxIndex].src}
                 alt={filtered[lightboxIndex].title}
+                decoding="async"
                 className="max-h-[75vh] w-auto object-contain mx-auto"
               />
             </div>

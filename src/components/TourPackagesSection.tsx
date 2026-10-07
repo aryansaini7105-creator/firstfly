@@ -152,6 +152,7 @@ Please share driver availability and customized best fare.`;
                         src={pkg.image}
                         alt={pkg.title}
                         loading="lazy"
+                        decoding="async"
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
                         onError={(e) => {

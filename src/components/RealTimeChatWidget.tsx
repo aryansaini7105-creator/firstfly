@@ -70,10 +70,18 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
     setIsTyping(true);
 
     try {
+      const historyPayload = messages.slice(-8).map((m) => ({
+        role: m.sender === 'user' ? 'user' : 'model',
+        text: m.text,
+      }));
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg.text }),
+        body: JSON.stringify({
+          message: userMsg.text,
+          history: historyPayload,
+        }),
       });
 
       const data = await response.json();

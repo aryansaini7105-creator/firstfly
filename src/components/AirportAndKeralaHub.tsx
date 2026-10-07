@@ -51,7 +51,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
       to: 'Agra (Taj Mahal & Mathura)',
       distance: '220 km',
       duration: '3.5 Hours',
-      image: '/tours/golden-triangle.jpg',
+      image: '/tours/agra.jpg',
       recommendedVehicle: 'Toyota Innova Crysta / Ertiga',
       tagline: 'Direct expressway run to Taj Mahal with sunrise/same-day drop',
       highlights: ['Yamuna Expressway 6-lane glide', 'English & Hindi speaking chauffeur', 'Foreign tourist friendly'],
@@ -105,7 +105,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
   const keralaRoutes: HubRoute[] = [
     {
       id: 'cochin-airport-munnar',
-      from: 'Cochin International Airport (COK)',
+      from: 'Kochi (City & Airport)',
       to: 'Munnar (Tea Gardens & Eravikulam)',
       distance: '125 km',
       duration: '3.5 Hours',
@@ -116,29 +116,29 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
     },
     {
       id: 'cochin-airport-alleppey',
-      from: 'Cochin International Airport (COK)',
+      from: 'Kochi / Fort Kochi',
       to: 'Alleppey (Alappuzha Houseboats & Backwaters)',
       distance: '85 km',
       duration: '2.2 Hours',
       image: '/tours/alleppey.jpg',
       recommendedVehicle: 'Maruti Ertiga / Innova Crysta',
-      tagline: 'Airport exit directly to luxury houseboat jetty boarding points on Vembanad Lake',
+      tagline: 'Direct ride to luxury houseboat jetty boarding points on Vembanad Lake',
       highlights: ['Punctual flight tracking', 'Luggage transfer to boat', 'Coastal expressway route'],
     },
     {
       id: 'cochin-athirappilly',
-      from: 'Cochin International Airport (COK)',
+      from: 'Kochi / Chalakudy',
       to: 'Athirappilly Waterfalls (Vazhachal Falls)',
       distance: '45 km',
       duration: '1.2 Hours',
       image: '/tours/athirappilly.jpg',
       recommendedVehicle: 'Toyota Innova Crysta',
       tagline: 'Niagara of South India — pristine rainforest drive with wild elephant corridor views',
-      highlights: ['Short 1-hour drive from Cochin Airport', 'Vazhachal rapids & botanical stop', 'Ideal for day trips'],
+      highlights: ['Short 1-hour drive from Kochi', 'Vazhachal rapids & botanical stop', 'Ideal for day trips'],
     },
     {
       id: 'trivandrum-varkala',
-      from: 'Trivandrum International Airport (TRV)',
+      from: 'Trivandrum (Airport & City)',
       to: 'Varkala (Papanasam Cliff & Beach)',
       distance: '45 km',
       duration: '1.2 Hours',
@@ -149,7 +149,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
     },
     {
       id: 'cochin-thekkady',
-      from: 'Cochin International Airport (COK)',
+      from: 'Kochi / Kottayam',
       to: 'Thekkady (Periyar Tiger Sanctuary & Spice Hills)',
       distance: '155 km',
       duration: '4.5 Hours',
@@ -160,7 +160,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
     },
     {
       id: 'trivandrum-kanyakumari',
-      from: 'Trivandrum International Airport (TRV)',
+      from: 'Trivandrum / Kovalam',
       to: 'Kanyakumari (Sunrise Point & Rock Memorial)',
       distance: '90 km',
       duration: '2.5 Hours',
@@ -171,7 +171,7 @@ export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSele
     },
     {
       id: 'cochin-wayanad',
-      from: 'Cochin International Airport (COK)',
+      from: 'Calicut (Kozhikode) / Kochi',
       to: 'Wayanad (Banasura Sagar & Chembra Peak)',
       distance: '260 km',
       duration: '6.0 Hours',
@@ -231,7 +231,7 @@ Please share driver availability and customized best fare quote.`;
   };
 
   return (
-    <section className="py-20 bg-slate-950 relative border-t border-slate-900 overflow-hidden">
+    <section id="airports" className="py-20 bg-slate-950 relative border-t border-slate-900 overflow-hidden">
       {/* Background radial gradient accent */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-amber-500/5 via-emerald-500/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -261,7 +261,7 @@ Please share driver availability and customized best fare quote.`;
               }`}
             >
               <Palmtree className="w-4 h-4" />
-              <span>Kerala & God's Own Country (Munnar, Alleppey, Varkala)</span>
+              <span>Kerala Tours (Munnar, Alleppey, Varkala)</span>
             </button>
 
             <button
@@ -274,7 +274,7 @@ Please share driver availability and customized best fare quote.`;
               }`}
             >
               <Plane className="w-4 h-4" />
-              <span>Airport Hubs (Delhi IGI, Bangalore BLR, Cochin COK, Goa)</span>
+              <span>Airport Transfers (Delhi, Bangalore, Goa, Mumbai)</span>
             </button>
 
             <button
@@ -287,7 +287,7 @@ Please share driver availability and customized best fare quote.`;
               }`}
             >
               <Mountain className="w-4 h-4" />
-              <span>Himalayan Mountain Corridors</span>
+              <span>Himalayan Corridors (Manali, Shimla)</span>
             </button>
           </div>
         </div>
@@ -306,6 +306,7 @@ Please share driver availability and customized best fare quote.`;
                     src={route.image}
                     alt={`${route.from} to ${route.to}`}
                     loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
@@ -328,19 +329,30 @@ Please share driver availability and customized best fare quote.`;
                     <span>Zero Surge</span>
                   </div>
 
-                  {/* Route Destination Title Banner */}
+                  {/* Clean Destination Banner (Clean, no repeated airport watermark) */}
                   <div className="absolute bottom-3 left-3 right-3">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
-                      {route.from.split(' (')[0]}
-                    </p>
-                    <h3 className="text-lg font-black text-white font-heading truncate drop-shadow-md">
-                      ➔ {route.to.split(' (')[0]}
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-950/80 backdrop-blur-md text-amber-400 text-[10px] font-black uppercase tracking-wider border border-amber-500/30 mb-1">
+                      Scenic Destination
+                    </span>
+                    <h3 className="text-xl font-black text-white font-heading truncate drop-shadow-lg">
+                      {route.to.split(' (')[0]}
                     </h3>
                   </div>
                 </div>
 
                 {/* Card Content */}
                 <div className="p-5 sm:p-6 space-y-4">
+                  {/* Clean Route Pill */}
+                  <div className="flex items-center justify-between text-xs py-2 px-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <Navigation className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <span className="text-slate-400 font-medium">Route:</span>
+                      <span className="text-white font-bold truncate">
+                        {route.from.split(' (')[0]} ➔ {route.to.split(' (')[0]}
+                      </span>
+                    </div>
+                  </div>
+
                   <p className="text-xs text-slate-300 leading-relaxed min-h-[36px]">
                     {route.tagline}
                   </p>

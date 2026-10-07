@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Star,
   Quote,
@@ -27,6 +27,38 @@ export const ReviewsAndStats: React.FC = () => {
     text: '',
   });
   const [submittedMessage, setSubmittedMessage] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/reviews')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.highlights && data.highlights.length > 0) {
+          // Merge any backend server verified highlights smoothly
+          const serverReviews: CustomerReview[] = data.highlights.map((h: any) => ({
+            id: `server-rev-${h.id}`,
+            name: h.author,
+            location: 'Verified Trip',
+            trip: h.city,
+            vehicleUsed: 'FirstFly Verified Fleet',
+            rating: h.rating || 5,
+            date: 'Verified Route',
+            text: h.text,
+            avatarLetter: h.author.slice(0, 2).toUpperCase(),
+            accentColor: '#10b981',
+            verifiedBooking: true,
+          }));
+
+          setReviews((prev) => {
+            const existingIds = new Set(prev.map((r) => r.id));
+            const newToAdd = serverReviews.filter((r) => !existingIds.has(r.id));
+            return [...newToAdd, ...prev];
+          });
+        }
+      })
+      .catch(() => {
+        // graceful offline fallback with bundled data
+      });
+  }, []);
 
   const handleAddReview = (e: React.FormEvent) => {
     e.preventDefault();

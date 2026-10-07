@@ -375,7 +375,7 @@ Please confirm driver assignment and vehicle registration.`;
                       </p>
                     </div>
                     <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-slate-700">
-                      <img src={v.images[0]} alt={v.name} className="w-full h-full object-cover" />
+                      <img src={v.images[0]} alt={v.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                     </div>
                   </button>
                 ))}

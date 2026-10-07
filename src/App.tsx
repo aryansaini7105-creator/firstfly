@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { FleetSection } from './components/FleetSection';
-import { AirportAndKeralaHub } from './components/AirportAndKeralaHub';
-import { TourPackagesSection } from './components/TourPackagesSection';
-import { SecurityAndSafety } from './components/SecurityAndSafety';
-import { ReviewsAndStats } from './components/ReviewsAndStats';
-import { FAQSection } from './components/FAQSection';
-import { Footer } from './components/Footer';
-import { RealTimeChatWidget } from './components/RealTimeChatWidget';
-import { BookingModal } from './components/BookingModal';
 import { MobileQuickBar } from './components/MobileQuickBar';
 import { MessageSquare, Phone, Sparkles } from 'lucide-react';
 import { COMPANY_DETAILS } from './data/travelData';
 import { TripType, Vehicle, TourPackage } from './types/travel';
 import { LanguageProvider } from './context/LanguageContext';
+
+// Lazy loaded below-the-fold and modal components for ultra-fast Mobile PageSpeed
+const FleetSection = lazy(() => import('./components/FleetSection').then(m => ({ default: m.FleetSection })));
+const TourPackagesSection = lazy(() => import('./components/TourPackagesSection').then(m => ({ default: m.TourPackagesSection })));
+const AirportAndKeralaHub = lazy(() => import('./components/AirportAndKeralaHub').then(m => ({ default: m.AirportAndKeralaHub })));
+const SecurityAndSafety = lazy(() => import('./components/SecurityAndSafety').then(m => ({ default: m.SecurityAndSafety })));
+const ReviewsAndStats = lazy(() => import('./components/ReviewsAndStats').then(m => ({ default: m.ReviewsAndStats })));
+const FAQSection = lazy(() => import('./components/FAQSection').then(m => ({ default: m.FAQSection })));
+const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
+const BookingModal = lazy(() => import('./components/BookingModal').then(m => ({ default: m.BookingModal })));
+const RealTimeChatWidget = lazy(() => import('./components/RealTimeChatWidget').then(m => ({ default: m.RealTimeChatWidget })));
 
 export default function App() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -90,21 +92,16 @@ export default function App() {
             onOpenChat={() => setIsChatOpen(true)}
           />
 
-          <FleetSection onSelectVehicle={handleSelectVehicle} />
-
-          <TourPackagesSection onBookPackage={handleBookPackage} />
-
-          <AirportAndKeralaHub onSelectCorridor={handleSelectCorridor} />
-
-          <SecurityAndSafety />
-
-          <ReviewsAndStats />
-
-          <FAQSection />
+          <Suspense fallback={<div className="h-40 flex items-center justify-center text-slate-600 text-xs">Loading fleet...</div>}>
+            <FleetSection onSelectVehicle={handleSelectVehicle} />
+            <TourPackagesSection onBookPackage={handleBookPackage} />
+            <AirportAndKeralaHub onSelectCorridor={handleSelectCorridor} />
+            <SecurityAndSafety />
+            <ReviewsAndStats />
+            <FAQSection />
+            <Footer />
+          </Suspense>
         </main>
-
-        {/* Footer */}
-        <Footer />
 
         {/* ═══ FLOATING ACTION BUTTONS (Desktop & Tablet only to avoid mobile bar overlap) ═══ */}
         <div className="hidden sm:flex fixed bottom-6 right-6 z-30 flex-col items-end gap-3 pointer-events-auto">
@@ -151,18 +148,26 @@ export default function App() {
         </div>
 
         {/* Integrated Real-Time Chat Widget Modal / Drawer */}
-        <RealTimeChatWidget
-          isOpen={isChatOpen}
-          onClose={() => setIsChatOpen(false)}
-          onOpenBooking={() => setIsBookingOpen(true)}
-        />
+        {isChatOpen && (
+          <Suspense fallback={null}>
+            <RealTimeChatWidget
+              isOpen={isChatOpen}
+              onClose={() => setIsChatOpen(false)}
+              onOpenBooking={() => setIsBookingOpen(true)}
+            />
+          </Suspense>
+        )}
 
         {/* Interactive Multi-Step Booking Modal */}
-        <BookingModal
-          isOpen={isBookingOpen}
-          onClose={() => setIsBookingOpen(false)}
-          initialParams={bookingParams}
-        />
+        {isBookingOpen && (
+          <Suspense fallback={null}>
+            <BookingModal
+              isOpen={isBookingOpen}
+              onClose={() => setIsBookingOpen(false)}
+              initialParams={bookingParams}
+            />
+          </Suspense>
+        )}
 
         {/* Mobile Sticky Quick Action Bar */}
         <MobileQuickBar

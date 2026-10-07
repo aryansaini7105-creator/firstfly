@@ -132,6 +132,8 @@ Please send driver assignment and final confirmation.`;
           alt="FirstFly Luxury Vehicles Across India"
           fetchPriority="high"
           decoding="async"
+          width={1920}
+          height={1080}
           className="w-full h-full object-cover object-center opacity-25 filter brightness-75 scale-105 transform motion-safe:animate-pulse-slow"
           onError={(e) => {
             // graceful fallback to high-res automotive night shot if local image fails

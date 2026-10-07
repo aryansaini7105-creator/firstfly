@@ -168,6 +168,8 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                     alt={`${vehicle.name} - FirstFly Authentic Fleet`}
                     loading="lazy"
                     decoding="async"
+                    width={600}
+                    height={360}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
@@ -437,13 +439,21 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                     key={idx}
                     type="button"
                     onClick={() => setModalImgIdx(idx)}
+                    aria-label={`View photo ${idx + 1} of ${selectedVehicleForModal.name}`}
                     className={`relative w-16 h-12 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
                       modalImgIdx === idx
                         ? 'border-amber-400 scale-105 shadow-md shadow-amber-500/20'
                         : 'border-slate-800 opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt={`${selectedVehicleForModal.name} preview thumbnail ${idx + 1}`}
+                      width={64}
+                      height={48}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

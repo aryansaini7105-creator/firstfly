@@ -169,15 +169,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
             {/* Mobile Menu Button */}
             <div className="flex items-center gap-2 lg:hidden">
               <button
+                type="button"
                 onClick={onOpenBooking}
-                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 sm:hidden"
+                aria-label="Book Cab or Check Fare Online"
+                className="px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-black bg-amber-500 text-slate-950 sm:hidden shadow-sm active:scale-95 flex items-center justify-center"
               >
                 Book
               </button>
               <button
+                type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
-                aria-label="Toggle Menu"
+                className="p-2.5 min-h-[44px] min-w-[44px] rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white flex items-center justify-center active:scale-95"
+                aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>

@@ -58,35 +58,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
               <span>{COMPANY_DETAILS.phone}</span>
             </a>
 
-            {/* ═══ CHOOSE LANGUAGE TOGGLE (English / हिन्दी) ═══ */}
-            <div className="flex items-center gap-1.5 bg-slate-950 text-white px-2.5 py-1 rounded-full border border-slate-800 shadow-sm font-bold">
+            {/* ═══ CHOOSE LANGUAGE TOGGLE (English / हिन्दी / ਪੰਜਾਬੀ / ગુજરાતી) ═══ */}
+            <div className="flex items-center gap-1 bg-slate-950 text-white px-2 py-0.5 rounded-full border border-slate-800 shadow-sm font-bold">
               <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[10px] text-slate-300 font-semibold mr-0.5">Choose Language:</span>
-              <button
-                type="button"
-                onClick={() => setLanguage('en')}
-                aria-label="Switch to English language"
-                className={`px-2 py-0.5 rounded-full text-[11px] transition-all cursor-pointer ${
-                  language === 'en'
-                    ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                English
-              </button>
-              <span className="text-slate-600 font-bold">|</span>
-              <button
-                type="button"
-                onClick={() => setLanguage('hi')}
-                aria-label="हिन्दी भाषा चुनें"
-                className={`px-2 py-0.5 rounded-full text-[11px] transition-all cursor-pointer ${
-                  language === 'hi'
-                    ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                हिन्दी
-              </button>
+              <span className="text-[10px] text-slate-300 font-semibold mr-0.5 hidden sm:inline">{t('chooseLanguage')}:</span>
+              {(
+                [
+                  { code: 'en', label: 'EN', title: 'English' },
+                  { code: 'hi', label: 'हिन्दी', title: 'हिन्दी' },
+                  { code: 'pa', label: 'ਪੰਜਾਬੀ', title: 'ਪੰਜਾਬੀ' },
+                  { code: 'gu', label: 'ગુજરાતી', title: 'ગુજરાતી' },
+                ] as const
+              ).map((langItem) => (
+                <button
+                  key={langItem.code}
+                  type="button"
+                  onClick={() => setLanguage(langItem.code)}
+                  aria-label={`Switch to ${langItem.title}`}
+                  className={`px-1.5 py-0.5 rounded-full text-[10px] sm:text-[11px] transition-all cursor-pointer ${
+                    language === langItem.code
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  {langItem.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -192,30 +189,33 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
         {mobileMenuOpen && (
           <div className="lg:hidden glass-panel-elevated border-b border-slate-800 px-4 pt-3 pb-6 mt-2 space-y-3 animate-in fade-in slide-in-from-top-4 duration-200">
             {/* Mobile Language Switcher */}
-            <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold gap-2">
               <span className="flex items-center gap-1.5 text-slate-300">
                 <Globe className="w-3.5 h-3.5 text-amber-400" />
-                <span>Select Language:</span>
+                <span>{t('chooseLanguage', 'Language')}:</span>
               </span>
-              <div className="flex items-center gap-1 bg-slate-950 p-0.5 rounded-lg border border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setLanguage('en')}
-                  className={`px-2.5 py-1 rounded text-xs font-bold transition-all ${
-                    language === 'en' ? 'bg-amber-500 text-slate-950 font-black shadow-sm' : 'text-slate-400'
-                  }`}
-                >
-                  English
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage('hi')}
-                  className={`px-2.5 py-1 rounded text-xs font-bold transition-all ${
-                    language === 'hi' ? 'bg-amber-500 text-slate-950 font-black shadow-sm' : 'text-slate-400'
-                  }`}
-                >
-                  हिन्दी
-                </button>
+              <div className="grid grid-cols-4 gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+                {(
+                  [
+                    { code: 'en', label: 'English' },
+                    { code: 'hi', label: 'हिन्दी' },
+                    { code: 'pa', label: 'ਪੰਜਾਬੀ' },
+                    { code: 'gu', label: 'ગુજરાતી' },
+                  ] as const
+                ).map((langItem) => (
+                  <button
+                    key={langItem.code}
+                    type="button"
+                    onClick={() => setLanguage(langItem.code)}
+                    className={`px-2 py-1.5 rounded text-[11px] font-bold text-center transition-all ${
+                      language === langItem.code
+                        ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {langItem.label}
+                  </button>
+                ))}
               </div>
             </div>
 

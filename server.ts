@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import compression from 'compression';
 import { GoogleGenAI } from '@google/genai';
@@ -266,6 +267,76 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// ═══ PERSISTENT OWNER INTERACTION & LEADS STORE ═══
+const DB_FILE = path.resolve(__dirname, 'interactions.json');
+
+export interface InteractionBooking {
+  id: string;
+  bookingRef: string;
+  customerName: string;
+  customerPhone: string;
+  pickup: string;
+  drop: string;
+  tripType: string;
+  travelDate: string;
+  returnDate?: string;
+  vehicleId?: string;
+  vehicleName: string;
+  passengers: string;
+  notes?: string;
+  status: 'new' | 'contacted' | 'confirmed' | 'cancelled';
+  createdAt: string;
+}
+
+export interface InteractionCallback {
+  id: string;
+  phone: string;
+  name: string;
+  status: 'new' | 'contacted' | 'confirmed';
+  requestedAt: string;
+}
+
+export interface InteractionChat {
+  id: string;
+  message: string;
+  reply: string;
+  timestamp: string;
+  phoneDetected?: string;
+}
+
+const interactionStore = {
+  bookings: [] as InteractionBooking[],
+  callbacks: [] as InteractionCallback[],
+  chats: [] as InteractionChat[],
+};
+
+// Load saved leads from disk
+function loadInteractions() {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf-8');
+      const data = JSON.parse(raw);
+      if (Array.isArray(data.bookings)) interactionStore.bookings = data.bookings;
+      if (Array.isArray(data.callbacks)) interactionStore.callbacks = data.callbacks;
+      if (Array.isArray(data.chats)) interactionStore.chats = data.chats;
+    }
+  } catch (err) {
+    console.error('Could not load interactions store:', err);
+  }
+}
+
+// Persist leads to disk
+function saveInteractions() {
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(interactionStore, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Could not save interactions store:', err);
+  }
+}
+
+// Initial load
+loadInteractions();
+
 // 2. Real-time Smart Chat endpoint (AI Concierge with Gemini & fallback)
 app.post('/api/chat', rateLimit(45, 60000), async (req, res) => {
   try {
@@ -280,6 +351,14 @@ app.post('/api/chat', rateLimit(45, 60000), async (req, res) => {
       .replace(/<[^>]*>?/gm, '')
       .trim()
       .slice(0, 1000);
+
+    // Detect if customer shared a phone number in chat
+    const phoneMatch = sanitizedMsg.match(/\b[6-9]\d{9}\b/);
+    const phoneDetected = phoneMatch ? phoneMatch[0] : undefined;
+
+    let reply = '';
+    let source = 'concierge-engine';
+    let modelUsed: string | undefined = undefined;
 
     if (aiClient) {
       const systemPrompt = `You are the official 24/7 AI Travel Concierge for FirstFly Tours & Travels (firstfly.in).
@@ -301,7 +380,7 @@ Key Hubs & Corridors:
 
 Guidelines:
 1. ALWAYS DIRECTLY ANSWER THE SPECIFIC QUESTION ASKED: If customer asks about a route, fare, car option, luggage, or driver, answer THAT specific point directly and helpfully.
-2. MATCH USER LANGUAGE: If the customer writes in Hindi, reply in warm, polite, fluent Hindi. If they write in Hinglish (Roman Hindi), reply in natural Hinglish or clear Hindi. If they write in English, reply in English.
+2. MATCH USER LANGUAGE: If the customer writes in Hindi, reply in warm, polite, fluent Hindi. If in Punjabi, reply in Punjabi. If they write in Hinglish (Roman Hindi), reply in natural Hinglish or clear Hindi. If in English, reply in English.
 3. PRICING & QUOTES: Explain that FirstFly gives guaranteed flat, transparent quotes with ZERO SURGE PRICING and NO HIDDEN TOLLS based on route km and days. Give realistic travel times and distances.
 4. CALL TO ACTION: Always remind them they can confirm driver allocation or get vehicle photos in 1-click on WhatsApp or by calling +91 98771 24650.
 5. FORMATTING: Use clean markdown, bullet points, and concise friendly paragraphs.`;
@@ -342,7 +421,10 @@ Guidelines:
           });
 
           if (response.text && response.text.trim().length > 0) {
-            return res.json({ reply: response.text.trim(), source: 'gemini-ai', model: modelName });
+            reply = response.text.trim();
+            source = 'gemini-ai';
+            modelUsed = modelName;
+            break;
           }
         } catch (geminiErr: any) {
           console.warn(`Gemini model ${modelName} call failed, trying next:`, geminiErr?.message || geminiErr);
@@ -350,9 +432,27 @@ Guidelines:
       }
     }
 
-    // High quality contextual fallback
-    const reply = generateSmartFallback(sanitizedMsg);
-    return res.json({ reply, source: 'concierge-engine' });
+    if (!reply) {
+      reply = generateSmartFallback(sanitizedMsg);
+    }
+
+    // Log chat interaction for owner notification
+    const chatEntry: InteractionChat = {
+      id: `CH-${Date.now().toString().slice(-5)}-${Math.floor(100 + Math.random() * 900)}`,
+      message: sanitizedMsg,
+      reply: reply.slice(0, 300),
+      timestamp: new Date().toISOString(),
+      phoneDetected,
+    };
+    interactionStore.chats.unshift(chatEntry);
+    if (interactionStore.chats.length > 150) interactionStore.chats.pop();
+    saveInteractions();
+
+    if (phoneDetected) {
+      console.log(`🔥 [OWNER ALERT - HOT LEAD] Phone ${phoneDetected} in chat inquiry: "${sanitizedMsg}"`);
+    }
+
+    return res.json({ reply, source, model: modelUsed });
   } catch (err: any) {
     console.error('Server chat error:', err);
     return res.status(500).json({
@@ -363,7 +463,7 @@ Guidelines:
 });
 
 // 3. Secure Booking Quote Submission (Anti-spam honeypot + validation)
-app.post('/api/book', rateLimit(15, 60000), (req, res) => {
+app.post('/api/book', rateLimit(25, 60000), (req, res) => {
   try {
     const {
       pickup,
@@ -405,6 +505,33 @@ app.post('/api/book', rateLimit(15, 60000), (req, res) => {
     const randomHex = Math.floor(1000 + Math.random() * 9000);
     const bookingRef = `FF-${Date.now().toString().slice(-4)}-${randomHex}`;
 
+    // Log to interaction store so the owner can easily know & contact
+    const newBooking: InteractionBooking = {
+      id: `BK-${Date.now()}-${randomHex}`,
+      bookingRef,
+      customerName: (customerName || 'Customer').trim(),
+      customerPhone: phoneClean,
+      pickup: pickup.trim(),
+      drop: drop.trim(),
+      tripType: tripType || 'One-Way',
+      travelDate: travelDate || 'Immediate',
+      returnDate,
+      vehicleId: vehicleId || 'standard',
+      vehicleName: vehicleName || 'Standard Fleet',
+      passengers: String(passengers || '1-4'),
+      notes,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    };
+
+    interactionStore.bookings.unshift(newBooking);
+    if (interactionStore.bookings.length > 200) interactionStore.bookings.pop();
+    saveInteractions();
+
+    console.log(
+      `🚨 [NEW CAB BOOKING FOR OWNER] ${newBooking.customerName} (${newBooking.customerPhone}) | ${newBooking.pickup} ➔ ${newBooking.drop} | ${newBooking.vehicleName}`
+    );
+
     // Format WhatsApp confirmation text for easy 1-click customer sending
     const summary = `*FirstFly Booking Inquiry [Ref: ${bookingRef}]*
 • Name: ${customerName || 'Customer'}
@@ -421,7 +548,7 @@ ${notes ? `• Special Requests: ${notes}` : ''}`;
     return res.json({
       success: true,
       bookingRef,
-      message: 'Booking request validated and logged successfully.',
+      message: 'Booking request validated and logged to owner dispatch desk successfully.',
       whatsappUrl,
     });
   } catch (err) {
@@ -431,9 +558,7 @@ ${notes ? `• Special Requests: ${notes}` : ''}`;
 });
 
 // 4. Instant 1-Tap Callback Request (Super easy for any user - Just 10-digit number)
-const callbackRequests: Array<{ id: string; phone: string; name?: string; requestedAt: string }> = [];
-
-app.post('/api/callback', rateLimit(10, 60000), (req, res) => {
+app.post('/api/callback', rateLimit(25, 60000), (req, res) => {
   try {
     const { phone, name } = req.body;
     if (!phone) {
@@ -449,14 +574,19 @@ app.post('/api/callback', rateLimit(10, 60000), (req, res) => {
     }
 
     const id = `CB-${Date.now().toString().slice(-4)}-${Math.floor(100 + Math.random() * 900)}`;
-    const requestItem = {
+    const requestItem: InteractionCallback = {
       id,
       phone: cleanPhone,
       name: (name || 'Customer').trim(),
+      status: 'new',
       requestedAt: new Date().toISOString(),
     };
-    callbackRequests.unshift(requestItem);
-    if (callbackRequests.length > 100) callbackRequests.pop();
+
+    interactionStore.callbacks.unshift(requestItem);
+    if (interactionStore.callbacks.length > 200) interactionStore.callbacks.pop();
+    saveInteractions();
+
+    console.log(`🚨 [CALLBACK REQUEST FOR OWNER] Phone: ${cleanPhone} | Name: ${requestItem.name}`);
 
     const whatsappAlert = `https://wa.me/919877124650?text=${encodeURIComponent(
       `*🚨 Immediate Call-Back Request [ID: ${id}]*\nCustomer Phone: ${cleanPhone}\nName: ${name || 'Customer'}\nPlease call back within 5 minutes for cab booking!`
@@ -472,6 +602,81 @@ app.post('/api/callback', rateLimit(10, 60000), (req, res) => {
   } catch (err) {
     console.error('Callback error:', err);
     return res.status(500).json({ success: false, error: 'Could not process callback' });
+  }
+});
+
+// ═══ OWNER DISPATCH & LEADS ENDPOINTS (Real-time Interaction Knowledge) ═══
+// GET /api/owner/interactions — Owner can view all bookings, callbacks, and inquiries in real-time
+app.get('/api/owner/interactions', (req, res) => {
+  try {
+    const pin = req.query.pin as string;
+    // Authorized if pin matches or if query parameter is empty/default
+    const isAuthorized = !pin || pin === '9877' || pin === '1234';
+
+    const unreadBookings = interactionStore.bookings.filter((b) => b.status === 'new').length;
+    const unreadCallbacks = interactionStore.callbacks.filter((c) => c.status === 'new').length;
+
+    return res.json({
+      success: true,
+      authorized: isAuthorized,
+      stats: {
+        totalBookings: interactionStore.bookings.length,
+        pendingCallbacks: unreadCallbacks,
+        unreadBookings,
+        totalChats: interactionStore.chats.length,
+        hotLeads: interactionStore.chats.filter((c) => !!c.phoneDetected).length,
+      },
+      bookings: interactionStore.bookings.slice(0, 50),
+      callbacks: interactionStore.callbacks.slice(0, 50),
+      chats: interactionStore.chats.slice(0, 50),
+      ownerHelpline: '+91 98771 24650',
+    });
+  } catch (err) {
+    console.error('Owner interactions fetch error:', err);
+    return res.status(500).json({ success: false, error: 'Failed to retrieve interactions' });
+  }
+});
+
+// POST /api/owner/status — Update status of a lead
+app.post('/api/owner/status', (req, res) => {
+  try {
+    const { type, id, status } = req.body;
+    if (!type || !id || !status) {
+      return res.status(400).json({ success: false, error: 'type, id, and status are required' });
+    }
+
+    if (type === 'booking') {
+      const item = interactionStore.bookings.find((b) => b.id === id);
+      if (item) item.status = status;
+    } else if (type === 'callback') {
+      const item = interactionStore.callbacks.find((c) => c.id === id);
+      if (item) item.status = status;
+    }
+
+    saveInteractions();
+    return res.json({ success: true, message: `Status updated to ${status}` });
+  } catch (err) {
+    console.error('Owner status update error:', err);
+    return res.status(500).json({ success: false, error: 'Failed to update status' });
+  }
+});
+
+// DELETE /api/owner/interaction — Delete lead
+app.delete('/api/owner/interaction', (req, res) => {
+  try {
+    const { type, id } = req.body;
+    if (type === 'booking') {
+      interactionStore.bookings = interactionStore.bookings.filter((b) => b.id !== id);
+    } else if (type === 'callback') {
+      interactionStore.callbacks = interactionStore.callbacks.filter((c) => c.id !== id);
+    } else if (type === 'chat') {
+      interactionStore.chats = interactionStore.chats.filter((c) => c.id !== id);
+    }
+    saveInteractions();
+    return res.json({ success: true });
+  } catch (err) {
+    console.error('Delete interaction error:', err);
+    return res.status(500).json({ success: false, error: 'Failed to delete' });
   }
 });
 

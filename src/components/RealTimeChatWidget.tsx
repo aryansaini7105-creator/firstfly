@@ -15,6 +15,7 @@ import {
   Maximize2
 } from 'lucide-react';
 import { COMPANY_DETAILS, FLEET_DATA } from '../data/travelData';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ChatMessage {
   id: string;
@@ -35,6 +36,7 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
   onClose,
   onOpenBooking,
 }) => {
+  const { language } = useLanguage();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome-1',
@@ -252,15 +254,43 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
 
         {/* Quick Suggestion Chips */}
         <div className="px-4 py-2 bg-slate-950 border-t border-slate-800/80 flex items-center gap-1.5 overflow-x-auto text-[11px] scrollbar-none">
-          <span className="text-slate-500 font-semibold shrink-0">Quick Ask:</span>
-          {[
-            'Delhi Airport to Agra/Jaipur',
-            'Kerala Munnar & Backwaters',
-            'Innova Crysta Availability',
-            'Force Urbania 17-Seater',
-            'Bangalore Airport to Coorg',
-            'All-India Permit & Safety',
-          ].map((chip, idx) => (
+          <span className="text-slate-500 font-semibold shrink-0">
+            {language === 'hi' ? 'जल्दी पूछें:' : language === 'pa' ? 'ਤੁਰੰਤ ਪੁੱਛੋ:' : language === 'gu' ? 'ઝડપી પ્રશ્નો:' : 'Quick Ask:'}
+          </span>
+          {(
+            language === 'hi'
+              ? [
+                  'दिल्ली एयरपोर्ट से आगरा / जयपुर',
+                  'केरल मुन्नार व अल्लेप्पी पैकेज',
+                  'इनोवा क्रिस्टा का रेट और बुकिंग',
+                  'फोर्स अर्बानिया 17-सीटर गाड़ी',
+                  'ऑल-इंडिया परमिट व ड्राइवर सुरक्षा',
+                ]
+              : language === 'pa'
+              ? [
+                  'ਦਿੱਲੀ ਏਅਰਪੋਰਟ ਤੋਂ ਆਗਰਾ / ਜੈਪੁਰ',
+                  'ਹਿਮਾਚਲ ਮਨਾਲੀ ਟੂਰ ਪੈਕੇਜ',
+                  'ਇਨੋਵਾ ਕ੍ਰਿਸਟਾ ਦਾ ਰੇਟ ਤੇ ਬੁਕਿੰਗ',
+                  '17-ਸੀਟਰ ਅਰਬਾਨੀਆ ਗੱਡੀ',
+                  'ਪੁਲਿਸ ਵੈਰੀਫਾਈਡ ਡਰਾਈਵਰ',
+                ]
+              : language === 'gu'
+              ? [
+                  'દિલ્હી એરપોર્ટથી આગ્રા / જયપુર',
+                  'કેરળ મુન્નાર અને બેકવોટર્સ',
+                  'ઇનોવા ક્રિસ્ટા રેટ અને બુકિંગ',
+                  '17-સીટર અર્બાનિયા વાન',
+                  'ઓલ ઇન્ડિયા પરમિટ અને સુરક્ષા',
+                ]
+              : [
+                  'Delhi Airport to Agra/Jaipur',
+                  'Kerala Munnar & Backwaters',
+                  'Innova Crysta Availability',
+                  'Force Urbania 17-Seater',
+                  'Bangalore Airport to Coorg',
+                  'All-India Permit & Safety',
+                ]
+          ).map((chip, idx) => (
             <button
               key={idx}
               onClick={() => handleQuickChip(chip)}
@@ -283,7 +313,15 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type your trip, route, or question..."
+            placeholder={
+              language === 'hi'
+                ? 'अपना सवाल या रूट लिखें (जैसे "दिल्ली से मनाली इनोवा")...'
+                : language === 'pa'
+                ? 'ਆਪਣਾ ਸਫ਼ਰ ਜਾਂ ਸਵਾਲ ਲਿਖੋ (ਜਿਵੇਂ "ਦਿੱਲੀ ਤੋਂ ਆਗਰਾ")...'
+                : language === 'gu'
+                ? 'તમારો પ્રશ્ન અથવા રૂટ લખો (જેમ કે "દિલ્હીથી મનાલી")...'
+                : 'Type your trip, route, or question...'
+            }
             className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
           />
           <button

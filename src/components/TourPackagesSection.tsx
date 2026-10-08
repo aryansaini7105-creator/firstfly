@@ -16,12 +16,14 @@ import {
 } from 'lucide-react';
 import { TOUR_PACKAGES, COMPANY_DETAILS } from '../data/travelData';
 import { TourPackage } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
 
 interface TourPackagesSectionProps {
   onBookPackage: (pkg: TourPackage) => void;
 }
 
 export const TourPackagesSection: React.FC<TourPackagesSectionProps> = ({ onBookPackage }) => {
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedPackageId, setExpandedPackageId] = useState<string | null>(null);
@@ -56,14 +58,13 @@ Please share driver availability and customized best fare.`;
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold mb-3">
-              <Compass className="w-3.5 h-3.5" /> All-India Handpicked Holiday Packages
+              <Compass className="w-3.5 h-3.5" /> {t('packagesTag')}
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-              Curated Tour Packages
+              {t('packagesTitle')}
             </h2>
             <p className="mt-2 text-slate-400 text-sm sm:text-base max-w-xl">
-              Experience India’s most scenic mountain roads, historic palaces, and holy shrines with a
-              dedicated vehicle and seasoned chauffeur at your service throughout.
+              {t('packagesSub')}
             </p>
           </div>
 
@@ -74,7 +75,7 @@ Please share driver availability and customized best fare.`;
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Manali, Shimla, Jaipur..."
+              placeholder={t('searchPackagesPlaceholder')}
               className="w-full bg-slate-900 border border-slate-800 rounded-2xl pl-10 pr-9 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-colors"
             />
             {searchQuery && (
@@ -224,7 +225,7 @@ Please share driver availability and customized best fare.`;
                           </div>
 
                           <div className="pt-2">
-                            <p className="text-xs font-bold text-slate-400 mb-1">Package Includes:</p>
+                            <p className="text-xs font-bold text-slate-400 mb-1">{t('packageIncludes')}</p>
                             <div className="space-y-1 text-[11px] text-slate-300">
                               {pkg.inclusions.map((inc, i) => (
                                 <p key={i} className="flex items-center gap-1.5">
@@ -241,7 +242,7 @@ Please share driver availability and customized best fare.`;
                         onClick={() => toggleExpand(pkg.id)}
                         className="mt-4 text-xs font-semibold text-slate-400 hover:text-amber-400 flex items-center gap-1 transition-colors"
                       >
-                        <span>{isExpanded ? 'Hide Itinerary' : 'View Full Itinerary & Inclusions'}</span>
+                        <span>{isExpanded ? t('hideItinerary') : t('viewItinerary')}</span>
                         {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                       </button>
                     </div>
@@ -251,10 +252,10 @@ Please share driver availability and customized best fare.`;
                   <div className="p-5 sm:p-6 pt-0 border-t border-slate-800/80 mt-4 flex items-center justify-between">
                     <div>
                       <span className="text-[10px] uppercase font-bold text-emerald-400 flex items-center gap-1">
-                        <Check className="w-3 h-3" /> All-Inclusive Package
+                        <Check className="w-3 h-3" /> {t('freeCancellation')}
                       </span>
                       <p className="text-sm font-black text-white font-heading">
-                        Best Rate on Inquiry
+                        {t('zeroSurgeNote')}
                       </p>
                     </div>
 
@@ -273,7 +274,7 @@ Please share driver availability and customized best fare.`;
                         onClick={() => onBookPackage(pkg)}
                         className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs hover:from-amber-400 hover:to-amber-500 transition-all shadow-md active:scale-95 flex items-center gap-1 cursor-pointer"
                       >
-                        <span>Inquire Tour</span>
+                        <span>{t('bookPackageBtn')}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>

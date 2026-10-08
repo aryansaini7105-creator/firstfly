@@ -13,12 +13,15 @@ import {
 } from 'lucide-react';
 import { POPULAR_ROUTES, FLEET_DATA, COMPANY_DETAILS } from '../data/travelData';
 import { RoutePreset, Vehicle } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
+import { logInteraction } from '../utils/interactionLogger';
 
 interface RouteFareCalculatorProps {
   onSelectRoute: (from: string, to: string, vehicleId: string) => void;
 }
 
 export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSelectRoute }) => {
+  const { t, language } = useLanguage();
   const [selectedRouteId, setSelectedRouteId] = useState<string>(POPULAR_ROUTES[0].id);
   const [customDistanceKm, setCustomDistanceKm] = useState<number>(POPULAR_ROUTES[0].distanceKm);
   const [isRoundTrip, setIsRoundTrip] = useState<boolean>(false);
@@ -31,6 +34,11 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
   const handleRoutePresetClick = (route: RoutePreset) => {
     setSelectedRouteId(route.id);
     setCustomDistanceKm(route.distanceKm);
+    logInteraction({
+      type: 'fare_calculated',
+      route: `${route.from} ➔ ${route.to}`,
+      details: `Distance: ${route.distanceKm} km, Duration: ${route.durationHours} hrs`,
+    });
   };
 
   return (
@@ -39,14 +47,13 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-bold mb-3">
-            <Compass className="w-3.5 h-3.5" /> All-India Route Explorer & Vehicle Matching
+            <Compass className="w-3.5 h-3.5" /> {t('calcHeading')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-            Explore Routes & Choose Your Vehicle
+            {t('calcHeading')}
           </h2>
           <p className="mt-3 text-slate-400 text-sm sm:text-base">
-            No surprise surge pricing. No driver cancellation drama. See exact distance, highway
-            details, and vehicle features tailored for your destination.
+            {t('calcSub')}
           </p>
         </div>
 
@@ -61,7 +68,7 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Popular Tourist Corridors
+              {t('tabPopularRoutes')}
             </button>
             <button
               onClick={() => setActiveTab('custom')}
@@ -71,7 +78,7 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Custom Distance Simulator
+              {t('tabCustomRoute')}
             </button>
           </div>
         </div>

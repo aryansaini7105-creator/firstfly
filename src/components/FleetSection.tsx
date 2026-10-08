@@ -17,12 +17,14 @@ import {
 } from 'lucide-react';
 import { FLEET_DATA, COMPANY_DETAILS } from '../data/travelData';
 import { Vehicle, VehicleCategory } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
 
 interface FleetSectionProps {
   onSelectVehicle: (vehicle: Vehicle) => void;
 }
 
 export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) => {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<VehicleCategory>('all');
   const [selectedVehicleForModal, setSelectedVehicleForModal] = useState<Vehicle | null>(null);
   const [modalImgIdx, setModalImgIdx] = useState(0);
@@ -74,14 +76,13 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5" /> 100% Commercial Yellow-Plate Fleet
+              <Sparkles className="w-3.5 h-3.5" /> {t('fleetTag')}
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-              Our Premium Travel Fleet
+              {t('fleetTitle')}
             </h2>
             <p className="mt-2 text-slate-400 text-sm sm:text-base max-w-xl">
-              From executive sedans to 17-seater luxury Urbania travellers. Every vehicle is GPS
-              tracked, sanitized before every trip, and driven by an experienced mountain chauffeur.
+              {t('fleetSub')}
             </p>
           </div>
 
@@ -89,11 +90,11 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900/90 rounded-2xl border border-slate-800">
               {[
-                { id: 'all', label: 'All Fleet' },
-                { id: 'suv', label: 'Luxury SUV' },
-                { id: 'muv', label: 'Family MUV' },
-                { id: 'traveller', label: '12-17 Seater Travellers' },
-                { id: 'sedan', label: 'Sedans' },
+                { id: 'all', label: t('filterAll') },
+                { id: 'suv', label: t('filterSuv') },
+                { id: 'muv', label: t('filterMuv') },
+                { id: 'traveller', label: t('filterLuxury') },
+                { id: 'sedan', label: t('filterSedan') },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -111,7 +112,7 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
 
             {/* Slide Next / Prev buttons for car options */}
             <div className="hidden sm:flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-2xl border border-slate-800">
-              <span className="text-[11px] font-bold text-slate-400 px-2">Browse Cars:</span>
+              <span className="text-[11px] font-bold text-slate-400 px-2">{t('slideControlsLabel')}:</span>
               <button
                 type="button"
                 onClick={() => scrollFleet('left')}
@@ -295,18 +296,18 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                       <div className="flex items-center gap-1.5 text-slate-300">
                         <Users className="w-4 h-4 text-sky-400" />
                         <span>
-                          <strong>{vehicle.seats}</strong> Seats
+                          <strong>{vehicle.seats}</strong> {t('seatsLabel')}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5 text-slate-300">
                         <Briefcase className="w-4 h-4 text-amber-400" />
                         <span>
-                          <strong>{vehicle.luggageBags}</strong> Bags
+                          <strong>{vehicle.luggageBags}</strong> {t('luggageLabel')}
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5 text-emerald-400">
                         <Wind className="w-4 h-4" />
-                        <span>Dual AC</span>
+                        <span>{t('acLabel')}</span>
                       </div>
                     </div>
 
@@ -325,10 +326,10 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                   <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
                     <div>
                       <span className="text-[10px] uppercase font-bold text-emerald-400 flex items-center gap-1">
-                        <Check className="w-3 h-3" /> Best Rate Guarantee
+                        <Check className="w-3 h-3" /> {t('zeroSurgeNote')}
                       </span>
                       <p className="text-sm font-black text-white font-heading">
-                        Custom Quote on Request
+                        {t('perKmRate')}
                       </p>
                     </div>
 
@@ -338,14 +339,14 @@ export const FleetSection: React.FC<FleetSectionProps> = ({ onSelectVehicle }) =
                         onClick={() => setSelectedVehicleForModal(vehicle)}
                         className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors cursor-pointer"
                       >
-                        Specs
+                        {t('viewSpecsAndPhotos')}
                       </button>
                       <button
                         type="button"
                         onClick={() => onSelectVehicle(vehicle)}
                         className="px-4 py-2 rounded-xl text-xs font-black bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 hover:from-amber-400 hover:to-amber-500 transition-all shadow-md shadow-amber-500/20 active:scale-95 flex items-center gap-1 cursor-pointer"
                       >
-                        <span>Book / Inquire</span>
+                        <span>{t('bookThisCar')}</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>

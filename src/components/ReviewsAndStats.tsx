@@ -14,8 +14,10 @@ import {
 } from 'lucide-react';
 import { CUSTOMER_REVIEWS, COMPANY_DETAILS } from '../data/travelData';
 import { CustomerReview } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
 
 export const ReviewsAndStats: React.FC = () => {
+  const { t } = useLanguage();
   const [reviews, setReviews] = useState<CustomerReview[]>(CUSTOMER_REVIEWS);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [newReview, setNewReview] = useState({
@@ -139,11 +141,10 @@ export const ReviewsAndStats: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5" /> 100% Real Travelers Reviews
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-              Customer Experiences
+              {t('reviewsTitle')}
             </h2>
             <p className="mt-2 text-slate-400 text-sm sm:text-base max-w-xl">
-              Read authentic feedback from families, corporate teams, and solo travelers who trust
-              FirstFly for their journeys across India.
+              {t('reviewsSub')}
             </p>
           </div>
 

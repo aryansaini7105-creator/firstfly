@@ -12,8 +12,10 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { COMPANY_DETAILS } from '../data/travelData';
+import { useLanguage } from '../context/LanguageContext';
 
 export const SecurityAndSafety: React.FC = () => {
+  const { t } = useLanguage();
   const securityPillars = [
     {
       icon: <Lock className="w-6 h-6 text-amber-400" />,
@@ -59,14 +61,13 @@ export const SecurityAndSafety: React.FC = () => {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-3">
-            <ShieldCheck className="w-4 h-4" /> Enterprise Grade Protection
+            <ShieldCheck className="w-4 h-4" /> {t('safetyTag')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight">
-            Security & Passenger Safety
+            {t('safetyTitle')}
           </h2>
           <p className="mt-3 text-slate-400 text-sm sm:text-base">
-            Built with rigorous cyber defense so our digital platform cannot be compromised, paired
-            with physical highway safeguards to guarantee peace of mind for you and your loved ones.
+            {t('safetySub')}
           </p>
         </div>
 

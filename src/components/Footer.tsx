@@ -11,8 +11,10 @@ import {
   ArrowUp
 } from 'lucide-react';
 import { COMPANY_DETAILS, POPULAR_ROUTES, FLEET_DATA } from '../data/travelData';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Footer: React.FC = () => {
+  const { t } = useLanguage();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -34,9 +36,7 @@ export const Footer: React.FC = () => {
             </div>
 
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-              India’s premier verified commercial vehicle and outstation cab booking service.
-              Featuring Toyota Innova Crysta, Maruti Ertiga, and Force Urbania 17-Seater luxury
-              travellers with seasoned mountain chauffeurs.
+              {t('footerAbout')}
             </p>
 
             <div className="flex items-center gap-3 pt-1">

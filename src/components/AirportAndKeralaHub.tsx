@@ -13,6 +13,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { COMPANY_DETAILS } from '../data/travelData';
+import { useLanguage } from '../context/LanguageContext';
 
 interface HubRoute {
   id: string;
@@ -31,6 +32,7 @@ interface AirportAndKeralaHubProps {
 }
 
 export const AirportAndKeralaHub: React.FC<AirportAndKeralaHubProps> = ({ onSelectCorridor }) => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'airports' | 'kerala' | 'hills'>('kerala');
 
   const airportRoutes: HubRoute[] = [
@@ -239,14 +241,13 @@ Please share driver availability and customized best fare quote.`;
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-3">
-            <Sparkles className="w-3.5 h-3.5" /> High-Demand Taxi Corridors & Airport Express
+            <Sparkles className="w-3.5 h-3.5" /> {t('airportHubTag')}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-heading tracking-tight text-balance">
-            Top Airport Transfers & Kerala Tourist Routes
+            {t('airportHubTitle')}
           </h2>
           <p className="mt-3 text-slate-400 text-sm sm:text-base leading-relaxed">
-            Where India travels most. Guaranteed on-time airport pickups with flight delay protection,
-            and dedicated chauffeur touring across Kerala’s misty tea hills, backwaters, and coastal cliffs.
+            {t('airportHubSub')}
           </p>
 
           {/* Interactive Mode Segmented Tabs */}
@@ -261,7 +262,7 @@ Please share driver availability and customized best fare quote.`;
               }`}
             >
               <Palmtree className="w-4 h-4" />
-              <span>Kerala Tours (Munnar, Alleppey, Varkala)</span>
+              <span>{t('tabKerala')}</span>
             </button>
 
             <button
@@ -274,7 +275,7 @@ Please share driver availability and customized best fare quote.`;
               }`}
             >
               <Plane className="w-4 h-4" />
-              <span>Airport Transfers (Delhi, Bangalore, Goa, Mumbai)</span>
+              <span>{t('tabAirports')}</span>
             </button>
 
             <button
@@ -287,7 +288,7 @@ Please share driver availability and customized best fare quote.`;
               }`}
             >
               <Mountain className="w-4 h-4" />
-              <span>Himalayan Corridors (Manali, Shimla)</span>
+              <span>{t('tabHills')}</span>
             </button>
           </div>
         </div>

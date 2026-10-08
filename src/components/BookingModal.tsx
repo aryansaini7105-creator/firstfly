@@ -23,6 +23,7 @@ import {
   getEstimatedDistanceAndHours
 } from '../data/travelData';
 import { TripType, Vehicle } from '../types/travel';
+import { useLanguage } from '../context/LanguageContext';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -41,6 +42,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   onClose,
   initialParams,
 }) => {
+  const { t, language } = useLanguage();
   const pickupId = useId();
   const dropId = useId();
 

@@ -24,7 +24,6 @@ import {
 } from '../data/travelData';
 import { TripType } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
-import { logInteraction } from '../utils/interactionLogger';
 
 interface HeroProps {
   onStartBooking: (params: {
@@ -151,37 +150,40 @@ Please send driver assignment and final confirmation.`;
         <div className="text-center max-w-4xl mx-auto space-y-4 mb-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-semibold shadow-lg shadow-amber-500/10">
             <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>{t('heroBadge')}</span>
+            <span>{t('heroBadge', 'All-India Tourist Permit • 100% Commercial Yellow Plate Fleet')}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight font-heading leading-tight sm:leading-none">
-            {t('heroHeadingLine1')} <br className="hidden sm:inline" />
+            {t('heroHeadingLine1', 'Book Premium Travel Vehicles')} <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent">
-              {t('heroHeadingLine2')}
+              {t('heroHeadingLine2', 'Across All Of India')}
             </span>
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto font-normal leading-relaxed">
-            {t('heroSub')}
+            {t(
+              'heroSub',
+              'Toyota Innova Crysta, Maruti Ertiga, Force Urbania 17-Seater, and Travellers for family trips, corporate tours, and airport transfers. Zero surge charges, verified polite drivers, and 24/7 dispatch.'
+            )}
           </p>
 
           {/* Quick Metrics */}
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 pt-2 text-xs sm:text-sm text-slate-300">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>{t('metricPlates')}</span>
+              <span>{t('metricPlates', '100% Verified Commercial Plates')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Award className="w-4 h-4 text-amber-400" />
-              <span>{t('metricRating')}</span>
+              <span>{t('metricRating', '4.9★ Rated (1,850+ Tours)')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-sky-400" />
-              <span>{t('metricTolls')}</span>
+              <span>{t('metricTolls', 'Zero Hidden Toll Taxes')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Users className="w-4 h-4 text-purple-400" />
-              <span>{t('metricDrivers')}</span>
+              <span>{t('metricDrivers', 'Police-Verified Drivers')}</span>
             </div>
           </div>
         </div>
@@ -219,34 +221,35 @@ Please send driver assignment and final confirmation.`;
               </button>
             </div>
 
-            {/* Direct Language Switcher (Instant 1-Click English / हिन्दी / ਪੰਜਾਬੀ / മലയാളം) */}
-            <div className="flex items-center gap-1 bg-slate-950/90 text-white px-2.5 py-1 rounded-2xl border border-slate-800 shadow-sm text-xs shrink-0">
+            {/* Direct Language Switcher (Instant 1-Click English / Hindi) */}
+            <div className="flex items-center gap-1.5 bg-slate-950/90 text-white px-3 py-1.5 rounded-2xl border border-slate-800 shadow-sm text-xs shrink-0">
               <Globe className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-slate-400 font-semibold mr-0.5 hidden xs:inline">{t('chooseLanguage')}</span>
-              <div className="flex items-center gap-1">
-                {(
-                  [
-                    { code: 'en', label: 'English' },
-                    { code: 'hi', label: 'हिन्दी' },
-                    { code: 'pa', label: 'ਪੰਜਾਬੀ' },
-                    { code: 'ml', label: 'മലയാളം' },
-                  ] as const
-                ).map((item) => (
-                  <button
-                    key={item.code}
-                    type="button"
-                    onClick={() => setLanguage(item.code)}
-                    aria-label={`Switch to ${item.label}`}
-                    className={`px-2 py-0.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      language === item.code
-                        ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
+              <span className="text-slate-400 font-semibold mr-0.5">Language:</span>
+              <button
+                type="button"
+                onClick={() => setLanguage('en')}
+                aria-label="Switch to English language"
+                className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  language === 'en'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                English
+              </button>
+              <span className="text-slate-700 font-bold">|</span>
+              <button
+                type="button"
+                onClick={() => setLanguage('hi')}
+                aria-label="हिन्दी भाषा चुनें"
+                className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  language === 'hi'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                हिन्दी
+              </button>
             </div>
           </div>
 
@@ -273,13 +276,6 @@ Please send driver assignment and final confirmation.`;
                 {/* 1. Direct Call */}
                 <a
                   href={`tel:${COMPANY_DETAILS.phone}`}
-                  onClick={() =>
-                    logInteraction({
-                      type: 'direct_call',
-                      customerPhone: COMPANY_DETAILS.phone,
-                      details: 'Customer tapped Hero Option 1 Direct Call',
-                    })
-                  }
                   aria-label={`Call directly: ${COMPANY_DETAILS.phone}`}
                   className="group flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-b from-blue-900/40 to-blue-950/80 border-2 border-blue-600/60 hover:border-blue-400 text-white transition-all transform hover:-translate-y-0.5 active:scale-95 shadow-lg shadow-blue-950/50"
                 >
@@ -297,20 +293,10 @@ Please send driver assignment and final confirmation.`;
                   href={`https://wa.me/${COMPANY_DETAILS.cleanPhone}?text=${encodeURIComponent(
                     language === 'hi'
                       ? 'नमस्ते FirstFly! मुझे तुरंत टैक्सी / कैब बुक करनी है। कृपया रेट और गाड़ी भेजें।'
-                      : language === 'pa'
-                        ? 'ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ FirstFly! ਮੈਨੂੰ ਤੁਰੰਤ ਟੈਕਸੀ / ਕੈਬ ਬੁੱਕ ਕਰਨੀ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਰੇਟ ਅਤੇ ਗੱਡੀ ਭੇਜੋ।'
-                        : language === 'ml'
-                          ? 'ഹലോ FirstFly! എനിക്ക് ടാക്സി ബുക്ക് ചെയ്യണം. ദയവായി നിരക്കുകൾ അയക്കുക.'
-                          : 'Hello FirstFly! I want to book a taxi/cab. Please share rates and car options.'
+                      : 'Hello FirstFly! I want to book a taxi/cab. Please share rates and car options.'
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() =>
-                    logInteraction({
-                      type: 'whatsapp_click',
-                      details: 'Customer tapped Hero Option 2 WhatsApp Booking',
-                    })
-                  }
                   aria-label={`Book on WhatsApp: ${COMPANY_DETAILS.phone}`}
                   className="group flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-b from-emerald-900/40 to-emerald-950/80 border-2 border-emerald-600/60 hover:border-emerald-400 text-white transition-all transform hover:-translate-y-0.5 active:scale-95 shadow-lg shadow-emerald-950/50"
                 >

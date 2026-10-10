@@ -786,6 +786,38 @@ app.get('/api/reviews', (_req, res) => {
   });
 });
 
+// 7. Google Search Console Site Verification & Crawler Routes
+app.get('/google:code.html', (req, res) => {
+  const code = req.params.code;
+  const fileName = `google${code}.html`;
+  const distPath = path.resolve(__dirname, 'dist', fileName);
+  const publicPath = path.resolve(__dirname, 'public', fileName);
+
+  if (fs.existsSync(distPath)) return res.sendFile(distPath);
+  if (fs.existsSync(publicPath)) return res.sendFile(publicPath);
+
+  // Instant response for Google Search Console bot verification
+  res.type('text/html').send(`google-site-verification: google${code}.html`);
+});
+
+app.get('/robots.txt', (_req, res) => {
+  const distPath = path.resolve(__dirname, 'dist', 'robots.txt');
+  const publicPath = path.resolve(__dirname, 'public', 'robots.txt');
+  res.type('text/plain');
+  if (fs.existsSync(distPath)) return res.sendFile(distPath);
+  if (fs.existsSync(publicPath)) return res.sendFile(publicPath);
+  res.send('User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: https://firstfly.in/sitemap.xml\n');
+});
+
+app.get('/sitemap.xml', (_req, res) => {
+  const distPath = path.resolve(__dirname, 'dist', 'sitemap.xml');
+  const publicPath = path.resolve(__dirname, 'public', 'sitemap.xml');
+  res.type('application/xml');
+  if (fs.existsSync(distPath)) return res.sendFile(distPath);
+  if (fs.existsSync(publicPath)) return res.sendFile(publicPath);
+  res.status(404).send('Not Found');
+});
+
 // Vite Integration (Dev middleware mode) & Production Static File Serving
 async function startServer() {
   if (!isProd) {

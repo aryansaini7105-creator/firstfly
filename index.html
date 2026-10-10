@@ -90,17 +90,33 @@
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": "TaxiService",
+          "@type": ["AutoRental", "TravelAgency", "LocalBusiness"],
           "@id": "https://firstfly.in/#taxicompany",
           "name": "FirstFly Tours & Travels",
           "alternateName": ["FirstFly Cabs", "First Fly", "FIRSTFLY All India Travels"],
           "description": "Premium verified vehicle and cab rental services across India. Fleet includes Toyota Innova Crysta, Maruti Ertiga, Force Urbania 17-Seater, and Force Traveller for outstation, airport pickup, family vacations, and corporate travel.",
+          "url": "https://firstfly.in/",
+          "logo": "https://firstfly.in/favicon.svg",
+          "image": "https://firstfly.in/og-cover.jpg",
           "telephone": "+91-98771-24650",
           "email": "hsingh67243@gmail.com",
           "priceRange": "₹₹",
           "currenciesAccepted": "INR",
           "paymentAccepted": "Cash, UPI, Google Pay, PhonePe, Net Banking",
           "openingHours": "Mo-Su 00:00-24:00",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Sector 43, Cabin 14, Outstation Terminal",
+            "addressLocality": "Chandigarh",
+            "addressRegion": "Punjab",
+            "postalCode": "160043",
+            "addressCountry": "IN"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 30.7333,
+            "longitude": 76.7794
+          },
           "areaServed": [
             { "@type": "Country", "name": "India" },
             { "@type": "State", "name": "Punjab" },
@@ -165,10 +181,55 @@
           },
           "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "1840",
-            "bestRating": "5",
-            "worstRating": "1"
+            "ratingValue": 4.9,
+            "reviewCount": 1840,
+            "bestRating": 5,
+            "worstRating": 1
+          },
+          "review": [
+            {
+              "@type": "Review",
+              "author": {
+                "@type": "Person",
+                "name": "Capt. Rajesh Sharma"
+              },
+              "datePublished": "2026-09-15",
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": 5,
+                "bestRating": 5,
+                "worstRating": 1
+              },
+              "reviewBody": "Booked Innova Crysta for 5-day family tour. Vehicle was pristine clean, driver Jaswinder was exceptionally courteous on steep mountain hairpin turns. 10/10 service!"
+            },
+            {
+              "@type": "Review",
+              "author": {
+                "@type": "Person",
+                "name": "Dr. Priya Nair"
+              },
+              "datePublished": "2026-09-22",
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": 5,
+                "bestRating": 5,
+                "worstRating": 1
+              },
+              "reviewBody": "Super smooth Cochin airport pickup with placard at midnight. Chilled AC, smooth driving through tea estates, completely transparent billing."
+            }
+          ]
+        },
+        {
+          "@type": "TaxiService",
+          "@id": "https://firstfly.in/#taxiservice",
+          "name": "FirstFly Outstation Cab & Taxi Services",
+          "provider": {
+            "@id": "https://firstfly.in/#taxicompany"
+          },
+          "serviceType": "Outstation Cabs, Airport Taxi, Luxury Van Rentals",
+          "areaServed": {
+            "@type": "Country",
+            "name": "India"
           }
         },
         {

@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny-all catch-all rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrapAdminEmail() {
+      return isSignedIn() &&
+             request.auth.token.email_verified == true &&
+             (request.auth.token.email == 'aryansaini7105@gmail.com' || request.auth.token.email == 'hsingh67243@gmail.com');
+    }
+
+    function isAdmin() {
+      return isBootstrapAdminEmail() || (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    function isValidInquiry(data) {
+      return data.keys().hasAll(['name', 'phone', 'inquiryType', 'status', 'createdAt']) &&
+        data.keys().hasOnly([
+          'name', 'phone', 'email', 'destination', 'pickup', 'drop',
+          'tripType', 'selectedPackage', 'vehicleName', 'travelDate', 'returnDate',
+          'numberOfTravellers', 'message', 'bookingRef', 'inquiryType',
+          'submissionTimestamp', 'createdAt', 'status', 'internalNotes'
+        ]) &&
+        data.name is string && data.name.size() >= 2 && data.name.size() <= 100 &&
+        data.phone is string && data.phone.size() >= 10 && data.phone.size() <= 20 &&
+        (!('email' in data) || (data.email is string && data.email.size() <= 100)) &&
+        (!('destination' in data) || (data.destination is string && data.destination.size() <= 200)) &&
+        (!('pickup' in data) || (data.pickup is string && data.pickup.size() <= 200)) &&
+        (!('drop' in data) || (data.drop is string && data.drop.size() <= 200)) &&
+        (!('tripType' in data) || (data.tripType is string && data.tripType.size() <= 50)) &&
+        (!('selectedPackage' in data) || (data.selectedPackage is string && data.selectedPackage.size() <= 200)) &&
+        (!('vehicleName' in data) || (data.vehicleName is string && data.vehicleName.size() <= 100)) &&
+        (!('travelDate' in data) || (data.travelDate is string && data.travelDate.size() <= 50)) &&
+        (!('returnDate' in data) || (data.returnDate is string && data.returnDate.size() <= 50)) &&
+        (!('numberOfTravellers' in data) || (data.numberOfTravellers is string && data.numberOfTravellers.size() <= 50)) &&
+        (!('message' in data) || (data.message is string && data.message.size() <= 2000)) &&
+        (!('bookingRef' in data) || (data.bookingRef is string && data.bookingRef.size() <= 50)) &&
+        (!('submissionTimestamp' in data) || (data.submissionTimestamp is string && data.submissionTimestamp.size() <= 50)) &&
+        data.createdAt is string && data.createdAt.size() <= 50 &&
+        data.inquiryType in ['booking', 'callback', 'tour_package', 'general_contact', 'quote'] &&
+        data.status in ['New', 'Contacted', 'Follow-up', 'Converted', 'Closed'] &&
+        (!('internalNotes' in data) || (data.internalNotes is string && data.internalNotes.size() <= 2000));
+    }
+
+    // Inquiries Collection:
+    // - Public customers can create new inquiries (status must be 'New', no initial internal notes)
+    // - Only verified administrators can read, update status/notes, or delete inquiries
+    match /inquiries/{inquiryId} {
+      allow create: if isValidId(inquiryId) &&
+                       isValidInquiry(incoming()) &&
+                       incoming().status == 'New' &&
+                       (!('internalNotes' in incoming()) || incoming().internalNotes == '');
+
+      allow read: if isAdmin();
+      allow update: if isAdmin() && isValidInquiry(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Admins Collection:
+    // - Verified users can read their own admin record or other admins if already admin
+    // - Bootstrap creation is allowed strictly for verified owner emails
+    match /admins/{adminId} {
+      allow read: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow create: if isBootstrapAdminEmail() &&
+                       request.auth.uid == adminId &&
+                       isValidId(adminId) &&
+                       incoming().email == request.auth.token.email &&
+                       incoming().role == 'admin' &&
+                       incoming().createdAt is string;
+      allow update, delete: if false;
+    }
+  }
+}

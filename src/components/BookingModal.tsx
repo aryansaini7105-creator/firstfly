@@ -24,6 +24,8 @@ import {
 } from '../data/travelData';
 import { TripType, Vehicle } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
+import { submitInquiry } from '../lib/firebase';
+import { InquiryType } from '../types/inquiry';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -34,6 +36,8 @@ interface BookingModalProps {
     tripType?: TripType;
     travelDate?: string;
     vehicleId?: string;
+    selectedPackage?: string;
+    inquiryType?: InquiryType;
   };
 }
 
@@ -61,6 +65,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [passengers, setPassengers] = useState(4);
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [notes, setNotes] = useState('');
   const [honeypot, setHoneypot] = useState(''); // Anti-bot field
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -96,6 +101,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     e.preventDefault();
     setErrorMessage('');
 
+    // Prevent duplicate submissions
+    if (isSubmitting) return;
+
     if (honeypot) {
       // Bot detected
       return;
@@ -115,48 +123,68 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pickup,
-          drop,
-          tripType,
-          travelDate,
-          returnDate: tripType === 'round-trip' ? returnDate : undefined,
-          vehicleId: selectedVehicle.id,
-          vehicleName: selectedVehicle.name,
-          customerName,
-          customerPhone,
-          passengers,
-          notes,
-          honeypot,
-        }),
+      // Generate unique booking reference
+      const randomHex = Math.floor(1000 + Math.random() * 9000);
+      const generatedRef = `FF-${Date.now().toString().slice(-4)}-${randomHex}`;
+
+      // 1. Direct Save to Firebase Firestore "inquiries" collection
+      await submitInquiry({
+        name: customerName,
+        phone: cleanDigits,
+        email: customerEmail,
+        destination: drop,
+        pickup,
+        drop,
+        tripType,
+        selectedPackage: initialParams?.selectedPackage || '',
+        vehicleName: selectedVehicle.name,
+        travelDate,
+        returnDate: tripType === 'round-trip' ? returnDate : '',
+        numberOfTravellers: String(passengers),
+        message: notes,
+        bookingRef: generatedRef,
+        inquiryType: (initialParams?.inquiryType as any) || 'booking',
       });
 
-      const data = await response.json();
-      if (data.success) {
-        setBookingRef(data.bookingRef);
-        setStep(3);
+      // 2. Also register in server endpoint for WhatsApp link generation
+      try {
+        await fetch('/api/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pickup,
+            drop,
+            tripType,
+            travelDate,
+            returnDate: tripType === 'round-trip' ? returnDate : undefined,
+            vehicleId: selectedVehicle.id,
+            vehicleName: selectedVehicle.name,
+            customerName,
+            customerPhone: cleanDigits,
+            passengers,
+            notes,
+            honeypot,
+          }),
+        });
+      } catch {}
 
-        // Fire festive celebration confetti
-        try {
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-          });
-        } catch {
-          // ignore if canvas not supported
-        }
-      } else {
-        setErrorMessage(data.error || 'Failed to submit booking. Please call directly.');
-      }
-    } catch {
-      // Offline fallback: generate client-side booking ref
-      const fallbackRef = `FF-${Date.now().toString().slice(-4)}-${Math.floor(1000 + Math.random() * 9000)}`;
-      setBookingRef(fallbackRef);
+      setBookingRef(generatedRef);
       setStep(3);
+
+      // Fire festive celebration confetti
+      try {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      } catch {}
+    } catch (err: any) {
+      console.error('Firestore booking save error:', err);
+      // Strictly never show success if database write fails
+      setErrorMessage(
+        err?.message || 'Failed to record booking inquiry in database. Please check your network or call directly.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -468,6 +496,19 @@ Please confirm driver assignment and vehicle registration.`;
               <p className="text-[10px] text-slate-500 mt-1">
                 Driver details and live GPS tracking link will be sent to this number.
               </p>
+            </div>
+
+            <div>
+              <label className="text-slate-300 font-semibold block mb-1">
+                Email Address (Optional)
+              </label>
+              <input
+                type="email"
+                value={customerEmail}
+                onChange={(e) => setCustomerEmail(e.target.value)}
+                placeholder="e.g. gurpreet@example.com"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white font-medium focus:outline-none focus:border-amber-400"
+              />
             </div>
 
             <div>

@@ -24,6 +24,7 @@ import {
 } from '../data/travelData';
 import { TripType } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
+import { submitInquiry } from '../lib/firebase';
 
 interface HeroProps {
   onStartBooking: (params: {
@@ -44,6 +45,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartBooking, onOpenChat }) => {
   const [activeMode, setActiveMode] = useState<'quick' | 'calculator'>('quick');
   const [callbackPhone, setCallbackPhone] = useState('');
   const [callbackSuccess, setCallbackSuccess] = useState<string | null>(null);
+  const [callbackError, setCallbackError] = useState<string | null>(null);
   const [isSubmittingCallback, setIsSubmittingCallback] = useState(false);
 
   const [tripType, setTripType] = useState<TripType>('one-way');
@@ -58,28 +60,55 @@ export const Hero: React.FC<HeroProps> = ({ onStartBooking, onOpenChat }) => {
 
   const handleCallbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanNum = callbackPhone.replace(/\D/g, '');
-    if (cleanNum.length < 10) return;
+    if (isSubmittingCallback) return;
 
+    const cleanNum = callbackPhone.replace(/\D/g, '');
+    if (cleanNum.length < 10) {
+      setCallbackError(
+        language === 'hi' ? 'कृपया 10 अंकों का फोन नंबर डालें' : 'Please enter a valid 10-digit phone number'
+      );
+      return;
+    }
+
+    setCallbackError(null);
     setIsSubmittingCallback(true);
     try {
-      const res = await fetch('/api/callback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: cleanNum,
-          name: `Quick 1-Tap Request (${selectedVehicleId})`,
-        }),
+      // 1. Direct Save to Firebase Firestore "inquiries" collection
+      const result = await submitInquiry({
+        name: 'Quick 1-Tap Request',
+        phone: cleanNum,
+        vehicleName: selectedVehicleId,
+        pickup,
+        drop,
+        tripType,
+        travelDate,
+        message: `Customer requested instant callback from Hero banner for route ${pickup} to ${drop}.`,
+        inquiryType: 'callback',
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setCallbackSuccess(data.id || 'CB-OK');
-        setCallbackPhone('');
-      } else {
-        setCallbackSuccess('CB-OK');
-      }
-    } catch {
-      setCallbackSuccess('CB-FAST');
+
+      // 2. Also inform server for WhatsApp dispatch link
+      try {
+        await fetch('/api/callback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: cleanNum,
+            name: `Quick 1-Tap Request (${selectedVehicleId})`,
+          }),
+        });
+      } catch {}
+
+      setCallbackSuccess(result.id || 'CB-OK');
+      setCallbackPhone('');
+    } catch (err: any) {
+      console.error('Failed to submit callback inquiry:', err);
+      setCallbackError(
+        err?.message ||
+          (language === 'hi'
+            ? 'कॉल अनुरोध दर्ज करने में त्रुटि। कृपया सीधा कॉल करें।'
+            : 'Could not submit request. Please call directly.')
+      );
+      setCallbackSuccess(null);
     } finally {
       setIsSubmittingCallback(false);
     }
@@ -333,6 +362,11 @@ Please send driver assignment and final confirmation.`;
                     </div>
                   ) : (
                     <form onSubmit={handleCallbackSubmit} className="space-y-2">
+                      {callbackError && (
+                        <div className="p-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-[10px] text-rose-300">
+                          {callbackError}
+                        </div>
+                      )}
                       <div className="relative">
                         <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-400">
                           +91

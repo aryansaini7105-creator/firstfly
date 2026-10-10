@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Compass,
   Phone,
@@ -8,15 +8,65 @@ import {
   ShieldCheck,
   Heart,
   MessageSquare,
-  ArrowUp
+  ArrowUp,
+  Lock,
+  Send,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { COMPANY_DETAILS, POPULAR_ROUTES, FLEET_DATA } from '../data/travelData';
 import { useLanguage } from '../context/LanguageContext';
+import { submitInquiry } from '../lib/firebase';
 
 export const Footer: React.FC = () => {
   const { t } = useLanguage();
+
+  // Quick Contact Form State
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const cleanPhone = phone.replace(/\D/g, '');
+    if (!name.trim() || cleanPhone.length < 10) {
+      setErrorMessage('Please provide your name and a valid 10-digit mobile number.');
+      return;
+    }
+
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      await submitInquiry({
+        name: name.trim(),
+        phone: cleanPhone,
+        email: email.trim(),
+        message: message.trim() || 'General inquiry submitted via footer contact form.',
+        inquiryType: 'general_contact',
+      });
+
+      setSuccessMessage(true);
+      setName('');
+      setPhone('');
+      setEmail('');
+      setMessage('');
+    } catch (err: any) {
+      console.error('Contact form error:', err);
+      setErrorMessage(err?.message || 'Failed to submit inquiry to database. Please call directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -71,7 +121,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links: Fleet */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
               Our Fleet
@@ -87,7 +137,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Popular Tourist Corridors */}
+          {/* Popular Corridors */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
               Popular Routes
@@ -103,12 +153,12 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Direct 24/7 Contacts */}
+          {/* Direct 24/7 Contacts & Quick Inquiry Form */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white font-heading">
-              24/7 Dispatch Desk
+              Contact & Inquiry Desk
             </h4>
-            <div className="space-y-2.5 text-xs">
+            <div className="space-y-2 text-xs">
               <div className="flex items-start gap-2">
                 <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
                 <div>
@@ -118,7 +168,7 @@ export const Footer: React.FC = () => {
                   >
                     {COMPANY_DETAILS.phone}
                   </a>
-                  <p className="text-[10px] text-slate-500">24 Hours / 7 Days</p>
+                  <p className="text-[10px] text-slate-500">24/7 Dispatch Team</p>
                 </div>
               </div>
 
@@ -135,31 +185,92 @@ export const Footer: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-2">
-                <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
-                <p className="text-slate-400 text-[11px] leading-snug">
-                  Punjab, Chandigarh, Delhi NCR & All-India Highway Network
-                </p>
-              </div>
-
-              <div className="flex items-start gap-2">
                 <Clock className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                <p className="text-slate-400 text-[11px]">Instant Dispatch: &lt; 15 mins</p>
+                <p className="text-slate-400 text-[11px]">Dispatch Response: &lt; 15 mins</p>
               </div>
+            </div>
+
+            {/* Quick Contact Box */}
+            <div className="pt-2">
+              <form onSubmit={handleContactSubmit} className="space-y-2 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">
+                  Quick Message / Inquire
+                </span>
+
+                {errorMessage && (
+                  <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-[10px]">
+                    {errorMessage}
+                  </div>
+                )}
+
+                {successMessage ? (
+                  <div className="p-2 rounded-xl bg-emerald-950/80 border border-emerald-600/60 text-center text-[11px] text-emerald-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto mb-0.5" />
+                    <p className="font-bold">Inquiry Received!</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">We will call or WhatsApp shortly.</p>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-white focus:outline-none focus:border-amber-400"
+                    />
+                    <input
+                      type="tel"
+                      required
+                      maxLength={10}
+                      placeholder="Phone (+91)"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-white focus:outline-none focus:border-amber-400"
+                    />
+                    <textarea
+                      rows={2}
+                      placeholder="Trip requirements / questions..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-white focus:outline-none focus:border-amber-400"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50"
+                    >
+                      <Send className="w-3 h-3" />
+                      <span>{isSubmitting ? 'Sending...' : 'Send Inquiry'}</span>
+                    </button>
+                  </>
+                )}
+              </form>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* Bottom Bar with Admin Portal Link */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {new Date().getFullYear()} FirstFly Tours & Travels. All Rights Reserved.</p>
 
-          <div className="flex items-center gap-4">
-            <span className="text-slate-400">
+          <div className="flex flex-wrap items-center gap-4">
+            <span className="text-slate-400 text-[11px]">
               Commercial Tourist Fleet PB 01 B 0051 / PB 01 G 3601
             </span>
+
+            {/* Owner Admin Portal Access Link */}
+            <a
+              href="/admin"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-400 border border-slate-800/80 transition-colors text-[11px] font-semibold"
+            >
+              <Lock className="w-3 h-3 text-amber-400" />
+              <span>Admin Portal</span>
+            </a>
+
             <button
               onClick={scrollToTop}
-              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
               title="Back to Top"
             >
               <ArrowUp className="w-4 h-4" />

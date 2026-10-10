@@ -1,10 +1,11 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { MobileQuickBar } from './components/MobileQuickBar';
 import { MessageSquare, Phone, Sparkles } from 'lucide-react';
 import { COMPANY_DETAILS } from './data/travelData';
 import { TripType, Vehicle, TourPackage } from './types/travel';
+import { InquiryType } from './types/inquiry';
 import { LanguageProvider } from './context/LanguageContext';
 
 // Lazy loaded below-the-fold and modal components for ultra-fast Mobile PageSpeed
@@ -17,8 +18,10 @@ const FAQSection = lazy(() => import('./components/FAQSection').then(m => ({ def
 const Footer = lazy(() => import('./components/Footer').then(m => ({ default: m.Footer })));
 const BookingModal = lazy(() => import('./components/BookingModal').then(m => ({ default: m.BookingModal })));
 const RealTimeChatWidget = lazy(() => import('./components/RealTimeChatWidget').then(m => ({ default: m.RealTimeChatWidget })));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 
 export default function App() {
+  const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [bookingParams, setBookingParams] = useState<{
@@ -27,7 +30,15 @@ export default function App() {
     tripType?: TripType;
     travelDate?: string;
     vehicleId?: string;
+    selectedPackage?: string;
+    inquiryType?: InquiryType;
   }>({});
+
+  useEffect(() => {
+    const handlePopState = () => setCurrentPath(window.location.pathname);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleStartBooking = (params: {
     pickup: string;
@@ -36,7 +47,10 @@ export default function App() {
     travelDate: string;
     vehicleId: string;
   }) => {
-    setBookingParams(params);
+    setBookingParams({
+      ...params,
+      inquiryType: 'booking',
+    });
     setIsBookingOpen(true);
   };
 
@@ -44,6 +58,7 @@ export default function App() {
     setBookingParams((prev) => ({
       ...prev,
       vehicleId: vehicle.id,
+      inquiryType: 'booking',
     }));
     setIsBookingOpen(true);
   };
@@ -54,6 +69,7 @@ export default function App() {
       drop: to,
       vehicleId,
       tripType: 'one-way',
+      inquiryType: 'booking',
     });
     setIsBookingOpen(true);
   };
@@ -63,6 +79,8 @@ export default function App() {
       pickup: 'Chandigarh / Delhi NCR',
       drop: pkg.destination,
       tripType: 'round-trip',
+      selectedPackage: pkg.title,
+      inquiryType: 'tour_package',
     });
     setIsBookingOpen(true);
   };
@@ -72,9 +90,26 @@ export default function App() {
       pickup,
       drop,
       tripType: 'one-way',
+      inquiryType: 'booking',
     });
     setIsBookingOpen(true);
   };
+
+  // If path is /admin or starts with /admin, render secure Admin Dashboard
+  if (currentPath === '/admin' || currentPath.startsWith('/admin/')) {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-300">
+            <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+            <p className="text-xs font-semibold">Loading FirstFly Admin Portal...</p>
+          </div>
+        }
+      >
+        <AdminDashboard />
+      </Suspense>
+    );
+  }
 
   return (
     <LanguageProvider>
@@ -132,7 +167,7 @@ export default function App() {
             <button
               onClick={() => setIsChatOpen(true)}
               aria-label="Chat with 24/7 AI Travel Concierge"
-              className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition-all"
+              className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm shadow-xl shadow-amber-500/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
               title="Chat with 24/7 AI Travel Concierge"
             >
               <span className="relative flex h-3 w-3">

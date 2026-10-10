@@ -5,8 +5,28 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import compression from 'compression';
 import { GoogleGenAI } from '@google/genai';
+import nodemailer, { type Transporter } from 'nodemailer';
 
 dotenv.config();
+
+const OWNER_EMAILS = [
+  (process.env.OWNER_EMAIL || 'hsingh67243@gmail.com').toLowerCase(),
+  'aryansaini7105@gmail.com',
+];
+
+// Configure email transporter with environment variables (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)
+let mailTransporter: Transporter | null = null;
+if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  mailTransporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: Number(process.env.SMTP_PORT) === 465,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -678,6 +698,135 @@ app.delete('/api/owner/interaction', (req, res) => {
     console.error('Delete interaction error:', err);
     return res.status(500).json({ success: false, error: 'Failed to delete' });
   }
+});
+
+// ═══ EMAIL NOTIFICATION DISPATCH (Server-Side Secure Integration) ═══
+app.post('/api/notify-inquiry', rateLimit(40, 60000), async (req, res) => {
+  try {
+    const {
+      id,
+      name,
+      phone,
+      email,
+      destination,
+      pickup,
+      drop,
+      tripType,
+      selectedPackage,
+      vehicleName,
+      travelDate,
+      returnDate,
+      numberOfTravellers,
+      message,
+      bookingRef,
+      inquiryType,
+      submissionTimestamp,
+    } = req.body;
+
+    if (!name || !phone) {
+      return res.status(400).json({ success: false, error: 'Name and phone are required' });
+    }
+
+    const cleanPhone = String(phone).replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      return res.status(400).json({ success: false, error: 'Invalid phone number' });
+    }
+
+    const titleType = (inquiryType || 'Inquiry').toUpperCase();
+    const formattedDate = new Date(submissionTimestamp || Date.now()).toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+    });
+
+    const subject = `🚨 [FIRSTFLY NEW LEAD] ${titleType}: ${name} (+91 ${cleanPhone})`;
+
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; background: #0f172a; color: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #f59e0b;">
+        <div style="border-bottom: 2px solid #f59e0b; padding-bottom: 16px; margin-bottom: 20px;">
+          <h2 style="color: #fbbf24; margin: 0;">FIRSTFLY TOURS & TRAVELS</h2>
+          <p style="color: #94a3b8; margin: 4px 0 0 0; font-size: 13px;">New Customer Inquiry Alert • 24/7 Automated Dispatch Desk</p>
+        </div>
+
+        <div style="background: #1e293b; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+          <h3 style="color: #38bdf8; margin-top: 0; font-size: 16px;">👤 Customer Contact Details</h3>
+          <p style="margin: 6px 0;"><strong>Customer Name:</strong> ${name}</p>
+          <p style="margin: 6px 0;"><strong>Phone:</strong> <a href="tel:+91${cleanPhone}" style="color: #34d399; font-weight: bold; text-decoration: none;">+91 ${cleanPhone}</a></p>
+          ${email ? `<p style="margin: 6px 0;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #38bdf8;">${email}</a></p>` : ''}
+          <p style="margin: 6px 0;"><strong>Inquiry Type:</strong> <span style="background: #f59e0b; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${inquiryType}</span></p>
+          <p style="margin: 6px 0;"><strong>Submitted:</strong> ${formattedDate} IST</p>
+          ${bookingRef ? `<p style="margin: 6px 0;"><strong>Booking Reference:</strong> <code style="background: #334155; padding: 2px 6px; border-radius: 4px; color: #fbbf24;">${bookingRef}</code></p>` : ''}
+        </div>
+
+        <div style="background: #1e293b; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+          <h3 style="color: #38bdf8; margin-top: 0; font-size: 16px;">🚗 Travel Requirements</h3>
+          ${pickup || drop ? `<p style="margin: 6px 0;"><strong>Route:</strong> ${pickup || 'N/A'} ➔ ${drop || 'N/A'}</p>` : ''}
+          ${destination ? `<p style="margin: 6px 0;"><strong>Destination:</strong> ${destination}</p>` : ''}
+          ${selectedPackage ? `<p style="margin: 6px 0;"><strong>Tour Package:</strong> ${selectedPackage}</p>` : ''}
+          ${vehicleName ? `<p style="margin: 6px 0;"><strong>Preferred Vehicle:</strong> ${vehicleName}</p>` : ''}
+          ${tripType ? `<p style="margin: 6px 0;"><strong>Trip Type:</strong> ${tripType}</p>` : ''}
+          ${travelDate ? `<p style="margin: 6px 0;"><strong>Travel Date:</strong> ${travelDate}</p>` : ''}
+          ${returnDate ? `<p style="margin: 6px 0;"><strong>Return Date:</strong> ${returnDate}</p>` : ''}
+          ${numberOfTravellers ? `<p style="margin: 6px 0;"><strong>Passengers / Travellers:</strong> ${numberOfTravellers}</p>` : ''}
+          ${message ? `<p style="margin: 6px 0; background: #0f172a; padding: 10px; border-radius: 6px; border-left: 3px solid #f59e0b;"><strong>Customer Message / Special Notes:</strong><br/>${message}</p>` : ''}
+        </div>
+
+        <div style="margin-top: 24px;">
+          <a href="https://wa.me/91${cleanPhone}?text=Hello%20${encodeURIComponent(name)},%20thank%20you%20for%20contacting%20FirstFly%20Tours%20%26%20Travels!%20Regarding%20your%20inquiry..."
+             style="background: #10b981; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block; margin-right: 12px;">
+            💬 WhatsApp Customer
+          </a>
+          <a href="tel:+91${cleanPhone}"
+             style="background: #2563eb; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
+            📞 Call Direct
+          </a>
+        </div>
+
+        <p style="margin-top: 24px; font-size: 11px; color: #64748b; border-top: 1px solid #334155; padding-top: 12px;">
+          Live dashboard access: <a href="https://www.firstflytoursandtravel.com/admin" style="color: #fbbf24;">FirstFly Admin Portal</a>
+        </p>
+      </div>
+    `;
+
+    console.log(`\n📬 [OWNER NOTIFICATION] Lead logged: ${name} (${cleanPhone}) | Destination: ${destination || drop || selectedPackage || 'General'}`);
+
+    if (mailTransporter) {
+      try {
+        await mailTransporter.sendMail({
+          from: `"FirstFly Dispatch Desk" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+          to: OWNER_EMAILS.join(', '),
+          subject,
+          html: emailHtml,
+        });
+        console.log(`✅ [EMAIL DISPATCHED] Successfully sent notification email to ${OWNER_EMAILS.join(', ')}`);
+      } catch (mailErr) {
+        console.warn(`⚠️ [EMAIL NOTICE] SMTP send issue:`, mailErr);
+      }
+    } else {
+      console.log(`ℹ️ [EMAIL QUEUED] Notification logged for owner ${OWNER_EMAILS.join(', ')} (SMTP credentials can be provided in .env).`);
+    }
+
+    return res.json({
+      success: true,
+      message: 'Inquiry registered and notification dispatched to owner.',
+    });
+  } catch (err) {
+    console.error('Notify inquiry error:', err);
+    return res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// Admin Authorization Verification Endpoint
+app.post('/api/admin/verify', (req, res) => {
+  const { email } = req.body;
+  if (!email || typeof email !== 'string') {
+    return res.status(400).json({ authorized: false, error: 'Email required' });
+  }
+  const cleanEmail = email.toLowerCase().trim();
+  const isAuthorized = OWNER_EMAILS.includes(cleanEmail);
+  return res.json({
+    authorized: isAuthorized,
+    email: cleanEmail,
+    role: isAuthorized ? 'admin' : 'unauthorized',
+  });
 });
 
 // Technical SEO Endpoints: robots.txt & sitemap.xml

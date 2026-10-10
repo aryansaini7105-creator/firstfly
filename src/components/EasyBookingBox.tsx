@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Phone, MessageSquare, CheckCircle2, Sparkles, Car, ShieldCheck, Clock, AlertCircle } from 'lucide-react';
 import { COMPANY_DETAILS } from '../data/travelData';
 import { useLanguage } from '../context/LanguageContext';
+import { submitInquiry } from '../lib/firebase';
 
 export const EasyBookingBox: React.FC = () => {
   const { language, t } = useLanguage();
@@ -13,6 +14,8 @@ export const EasyBookingBox: React.FC = () => {
 
   const handleSubmitCallback = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     const cleanNumber = phoneNumber.replace(/\D/g, '');
 
     if (cleanNumber.length < 10) {
@@ -28,29 +31,37 @@ export const EasyBookingBox: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('/api/callback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: cleanNumber,
-          name: `Quick Web Request (${selectedCabType})`,
-        }),
+      // 1. Save directly to Firebase Firestore "inquiries" collection
+      const result = await submitInquiry({
+        name: `Callback Request (${selectedCabType})`,
+        phone: cleanNumber,
+        vehicleName: selectedCabType,
+        message: `Customer requested instant callback for ${selectedCabType} cab category.`,
+        inquiryType: 'callback',
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setCallbackSuccess(data.id || 'CB-OK');
-        setPhoneNumber('');
-      } else {
-        setErrorMessage(
-          data.error ||
-            (language === 'hi'
-              ? 'कॉल अनुरोध भेजने में समस्या हुई। कृपया सीधा कॉल करें।'
-              : 'Could not submit callback request. Please call directly.')
-        );
-      }
-    } catch {
-      setCallbackSuccess('CB-FAST');
+      // 2. Also inform server for WhatsApp dispatch link
+      try {
+        await fetch('/api/callback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: cleanNumber,
+            name: `Quick Web Request (${selectedCabType})`,
+          }),
+        });
+      } catch {}
+
+      setCallbackSuccess(result.id || 'CB-OK');
+      setPhoneNumber('');
+    } catch (err: any) {
+      console.error('Failed to save callback request to database:', err);
+      setErrorMessage(
+        err?.message ||
+          (language === 'hi'
+            ? 'कॉल अनुरोध भेजने में समस्या हुई। कृपया सीधा कॉल करें।'
+            : 'Could not submit callback request to database. Please call directly.')
+      );
     } finally {
       setIsSubmitting(false);
     }

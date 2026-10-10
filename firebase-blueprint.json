@@ -1,0 +1,142 @@
+{
+  "entities": {
+    "inquiry": {
+      "title": "Customer Inquiry",
+      "description": "Customer bookings, tour inquiries, callback requests, and contact messages",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Customer's full name"
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 20,
+          "description": "Customer's phone number"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Customer's email address"
+        },
+        "destination": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Destination city or state"
+        },
+        "pickup": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Pickup location"
+        },
+        "drop": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Drop location"
+        },
+        "tripType": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Type of trip (one-way, round-trip, airport, etc.)"
+        },
+        "selectedPackage": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Selected tour package title"
+        },
+        "vehicleName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Requested vehicle category"
+        },
+        "travelDate": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Date of travel"
+        },
+        "returnDate": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Return date for round trips"
+        },
+        "numberOfTravellers": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Number of travellers or passengers"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Customer inquiry message or special requests"
+        },
+        "bookingRef": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Unique booking reference code"
+        },
+        "inquiryType": {
+          "type": "string",
+          "enum": ["booking", "callback", "tour_package", "general_contact", "quote"],
+          "description": "Source or type of inquiry"
+        },
+        "submissionTimestamp": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "ISO timestamp of form submission"
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Creation timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["New", "Contacted", "Follow-up", "Converted", "Closed"],
+          "description": "Current lifecycle status"
+        },
+        "internalNotes": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Private admin notes for lead follow-up"
+        }
+      },
+      "required": ["name", "phone", "inquiryType", "status", "createdAt"]
+    },
+    "admin": {
+      "title": "Admin Profile",
+      "description": "Authorized site owner administrator profile",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Authorized admin email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin"],
+          "description": "Role identifier"
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Admin registration timestamp"
+        }
+      },
+      "required": ["email", "role", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/inquiries/{inquiryId}": {
+      "schema": "inquiry",
+      "description": "Customer trip bookings, tour package inquiries, and callback requests"
+    },
+    "/admins/{adminId}": {
+      "schema": "admin",
+      "description": "Authorized website administrators"
+    }
+  }
+}

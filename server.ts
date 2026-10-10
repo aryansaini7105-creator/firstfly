@@ -691,6 +691,20 @@ app.get('/sitemap.xml', (_req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'sitemap.xml'));
 });
 
+// Google Search Console Site Verification
+app.get('/google148e0dd14c625009.html', (_req, res) => {
+  res.type('text/html');
+  const pubPath = path.resolve(__dirname, 'public', 'google148e0dd14c625009.html');
+  if (fs.existsSync(pubPath)) {
+    return res.sendFile(pubPath);
+  }
+  const distPath = path.resolve(__dirname, 'dist', 'google148e0dd14c625009.html');
+  if (fs.existsSync(distPath)) {
+    return res.sendFile(distPath);
+  }
+  res.send('google-site-verification: google148e0dd14c625009.html');
+});
+
 // 5. Server-side Accurate Route Fare Calculator
 app.post('/api/fare-estimate', (req, res) => {
   try {

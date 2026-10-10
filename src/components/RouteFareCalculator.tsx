@@ -14,7 +14,6 @@ import {
 import { POPULAR_ROUTES, FLEET_DATA, COMPANY_DETAILS } from '../data/travelData';
 import { RoutePreset, Vehicle } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
-import { logInteraction } from '../utils/interactionLogger';
 
 interface RouteFareCalculatorProps {
   onSelectRoute: (from: string, to: string, vehicleId: string) => void;
@@ -34,11 +33,6 @@ export const RouteFareCalculator: React.FC<RouteFareCalculatorProps> = ({ onSele
   const handleRoutePresetClick = (route: RoutePreset) => {
     setSelectedRouteId(route.id);
     setCustomDistanceKm(route.distanceKm);
-    logInteraction({
-      type: 'fare_calculated',
-      route: `${route.from} ➔ ${route.to}`,
-      details: `Distance: ${route.distanceKm} km, Duration: ${route.durationHours} hrs`,
-    });
   };
 
   return (

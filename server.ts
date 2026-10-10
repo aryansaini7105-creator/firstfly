@@ -361,7 +361,7 @@ app.post('/api/chat', rateLimit(45, 60000), async (req, res) => {
     let modelUsed: string | undefined = undefined;
 
     if (aiClient) {
-      const systemPrompt = `You are the official 24/7 AI Travel Concierge for FirstFly Tours & Travels (firstfly.in).
+      const systemPrompt = `You are the official 24/7 AI Travel Concierge for FirstFly Tours & Travels (firstflytoursandtravel.com).
 Official Contact & 24/7 Dispatch Desk: Call or WhatsApp +91 98771 24650 | Email: hsingh67243@gmail.com.
 
 Fleet & Seating:
@@ -806,7 +806,7 @@ app.get('/robots.txt', (_req, res) => {
   res.type('text/plain');
   if (fs.existsSync(distPath)) return res.sendFile(distPath);
   if (fs.existsSync(publicPath)) return res.sendFile(publicPath);
-  res.send('User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: https://firstfly.in/sitemap.xml\n');
+  res.send('User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: https://www.firstflytoursandtravel.com/sitemap.xml\n');
 });
 
 app.get('/sitemap.xml', (_req, res) => {

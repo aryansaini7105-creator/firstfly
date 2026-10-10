@@ -1,6 +1,6 @@
 # ==========================================
 # Robots.txt for FirstFly Tours & Travels
-# Official Website: https://firstfly.in/
+# Official Website: https://www.firstflytoursandtravel.com/
 # 24/7 Helpline: +91 98771 24650
 # ==========================================
 
@@ -16,4 +16,4 @@ Allow: /#faqs
 Disallow: /api/
 
 # Official XML Sitemap Location
-Sitemap: https://firstfly.in/sitemap.xml
+Sitemap: https://www.firstflytoursandtravel.com/sitemap.xml

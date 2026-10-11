@@ -26,6 +26,7 @@ import { TripType, Vehicle } from '../types/travel';
 import { useLanguage } from '../context/LanguageContext';
 import { submitInquiry } from '../lib/firebase';
 import { InquiryType } from '../types/inquiry';
+import { BrandLogo } from './BrandLogo';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -219,18 +220,23 @@ Please confirm driver assignment and vehicle registration.`;
 
         {/* Modal Stepper Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Verified Commercial Vehicle Reservation
-            </span>
-          </div>
+          <div className="flex items-start justify-between pr-8">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                  Verified Commercial Vehicle Reservation
+                </span>
+              </div>
 
-          <h3 className="text-2xl font-black text-white font-heading">
-            {step === 1 && 'Trip & Vehicle Selection'}
-            {step === 2 && 'Passenger & Contact Details'}
-            {step === 3 && 'Booking Confirmed!'}
-          </h3>
+              <h3 className="text-2xl font-black text-white font-heading">
+                {step === 1 && 'Trip & Vehicle Selection'}
+                {step === 2 && 'Passenger & Contact Details'}
+                {step === 3 && 'Booking Confirmed!'}
+              </h3>
+            </div>
+            <BrandLogo variant="badge" size="sm" className="w-10 h-10 hidden sm:inline-flex" />
+          </div>
 
           {/* Steps Progress Pills */}
           <div className="flex items-center gap-2 mt-3">

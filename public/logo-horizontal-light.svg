@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 120" width="540" height="120" fill="none">
+  <defs>
+    <radialGradient id="hLightGlobe" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </radialGradient>
+
+    <linearGradient id="hLightGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+
+    <linearGradient id="hLightCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#00a8e8"/>
+    </linearGradient>
+
+    <filter id="hLightDrop" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0a2540" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <g transform="translate(10, 6)">
+    <!-- Compass Ring -->
+    <circle cx="60" cy="54" r="45" stroke="url(#hLightGold)" stroke-width="4.5" fill="none" opacity="0.95"/>
+    <circle cx="60" cy="54" r="49" stroke="url(#hLightGold)" stroke-width="1" stroke-dasharray="2 6" fill="none" opacity="0.6"/>
+
+    <!-- Compass Cardinal Ticks -->
+    <line x1="60" y1="5" x2="60" y2="12" stroke="url(#hLightGold)" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="60" y1="96" x2="60" y2="103" stroke="url(#hLightGold)" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="11" y1="54" x2="18" y2="54" stroke="url(#hLightGold)" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="102" y1="54" x2="109" y2="54" stroke="url(#hLightGold)" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Compass Needle -->
+    <path d="M 60 5 L 67 18 L 60 15 Z" fill="#fbbf24"/>
+    <path d="M 60 5 L 53 18 L 60 15 Z" fill="#d97706"/>
+
+    <!-- Globe Sphere -->
+    <circle cx="60" cy="54" r="38" fill="url(#hLightGlobe)"/>
+
+    <!-- Coordinate Lines -->
+    <ellipse cx="60" cy="54" rx="22" ry="38" stroke="#ffffff" stroke-width="1.2" stroke-opacity="0.4" fill="none"/>
+    <ellipse cx="60" cy="54" rx="38" ry="16" stroke="#ffffff" stroke-width="1.2" stroke-opacity="0.4" fill="none"/>
+    <line x1="22" y1="54" x2="98" y2="54" stroke="#ffffff" stroke-width="1.2" stroke-opacity="0.4"/>
+    <line x1="60" y1="16" x2="60" y2="92" stroke="#ffffff" stroke-width="1.2" stroke-opacity="0.4"/>
+
+    <!-- Continents -->
+    <path d="M 41 34 Q 45 28 54 31 Q 57 37 53 42 Q 46 45 41 34 Z" fill="#ffffff" fill-opacity="0.75"/>
+    <path d="M 64 31 Q 75 28 79 35 Q 82 43 75 47 Q 69 44 64 37 Z" fill="#ffffff" fill-opacity="0.75"/>
+    <path d="M 45 53 Q 51 49 55 55 Q 53 65 47 63 Q 43 59 45 53 Z" fill="#ffffff" fill-opacity="0.75"/>
+    <path d="M 67 51 Q 76 50 78 57 Q 75 66 68 62 Q 64 57 67 51 Z" fill="#ffffff" fill-opacity="0.75"/>
+
+    <!-- Lower Wing Bar in Cyan -->
+    <path d="M 43 67 C 54 67 70 66 84 64 C 82 68 74 72 59 73 C 47 74 41 70 43 67 Z" fill="url(#hLightCyan)"/>
+
+    <!-- Main Arc in Deep Navy -->
+    <path d="M 26 87 C 28 73 37 59 51 49 C 65 39 84 31 107 19 C 91 28 71 39 57 52 C 43 65 35 77 32 86 Z" fill="#0f2852"/>
+
+    <!-- Navy Jet Climbing -->
+    <g transform="translate(107, 16) rotate(-35) scale(0.92)">
+      <path d="M 0 -20 C 1.4 -20 2.4 -18 2.6 -13 L 3.2 0 L 16 7 L 16 9.8 L 3.2 6.8 L 2.8 14.5 L 6.8 17.8 L 6.8 20 L 0 18.2 L -6.8 20 L -6.8 17.8 L -2.8 14.5 L -3.2 6.8 L -16 9.8 L -16 7 L -3.2 0 L -2.6 -13 C -2.4 -18 -1.4 -20 0 -20 Z"
+        fill="#0f2852" filter="url(#hLightDrop)"/>
+    </g>
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(142, 22)">
+    <text x="0" y="52" font-family="'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="49" letter-spacing="-0.8">
+      <tspan fill="#0a2540">FIRST</tspan><tspan fill="#00a8e8">FLY</tspan>
+    </text>
+
+    <g transform="translate(2, 75)">
+      <line x1="0" y1="-5" x2="34" y2="-5" stroke="url(#hLightGold)" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="39,-5 42,-8 45,-5 42,-2" fill="url(#hLightGold)"/>
+
+      <text x="56" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="13.5" fill="#0a2540" letter-spacing="3.8">
+        TOURS &amp; TRAVELS
+      </text>
+
+      <polygon points="262,-5 265,-8 268,-5 265,-2" fill="url(#hLightGold)"/>
+      <line x1="274" y1="-5" x2="308" y2="-5" stroke="url(#hLightGold)" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Menu, X, ShieldCheck, Compass, Car, MapPin, Sparkles, Clock, Globe } from 'lucide-react';
 import { COMPANY_DETAILS } from '../data/travelData';
 import { useLanguage } from '../context/LanguageContext';
+import { BrandLogo } from './BrandLogo';
 
 interface NavbarProps {
   onOpenBooking: () => void;
@@ -99,25 +100,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a href="#" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-300">
-                <Compass className="w-6 h-6 text-slate-950 font-black animate-spin-slow" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xl sm:text-2xl font-black tracking-tight text-white font-heading">
-                    FIRST<span className="text-amber-400">FLY</span>
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest bg-slate-800/80 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30">
-                    INDIA
-                  </span>
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide">
-                  Tours & Travels • All India Cab Fleet
-                </p>
-              </div>
-            </a>
+            {/* Stylish Clickable Brand Logo */}
+            <BrandLogo
+              variant="horizontal"
+              theme="dark"
+              size="md"
+              title="FirstFly Tours & Travels - Return to top"
+            />
 
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
@@ -125,7 +114,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
                 <a
                   key={link.name}
                   href={link.href}
-                  className="hover:text-amber-400 transition-colors py-1 relative group"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const targetId = link.href.replace('#', '');
+                    const element = document.getElementById(targetId);
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="hover:text-amber-400 transition-colors py-1 relative group cursor-pointer"
                 >
                   {link.name}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-200"></span>
@@ -188,6 +185,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="lg:hidden glass-panel-elevated border-b border-slate-800 px-4 pt-3 pb-6 mt-2 space-y-3 animate-in fade-in slide-in-from-top-4 duration-200">
+            {/* Mobile Header Branding */}
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-800/80">
+              <BrandLogo
+                variant="horizontal"
+                theme="dark"
+                size="sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                title="FirstFly Tours & Travels - Return to top"
+              />
+              <span className="text-[10px] font-extrabold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                All-India Cabs
+              </span>
+            </div>
+
             {/* Mobile Language Switcher */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold gap-2">
               <span className="flex items-center gap-1.5 text-slate-300">
@@ -224,8 +239,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenChat }) => 
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800 text-slate-200 hover:text-amber-400 transition-colors border border-slate-800/80"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setMobileMenuOpen(false);
+                    const targetId = link.href.replace('#', '');
+                    const element = document.getElementById(targetId);
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="px-3 py-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-800 text-slate-200 hover:text-amber-400 transition-colors border border-slate-800/80 cursor-pointer"
                 >
                   {link.name}
                 </a>

@@ -3,6 +3,8 @@
 @layer base {
   html {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
   }
 
   h1, h2, h3, h4, .font-heading {

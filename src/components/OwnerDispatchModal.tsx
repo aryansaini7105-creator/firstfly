@@ -19,6 +19,7 @@ import {
   Users
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { BrandLogo } from './BrandLogo';
 
 interface BookingLead {
   id: string;
@@ -155,9 +156,7 @@ export const OwnerDispatchModal: React.FC<OwnerDispatchModalProps> = ({ isOpen, 
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
+            <BrandLogo variant="badge" size="sm" className="w-10 h-10 shrink-0" />
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base sm:text-lg font-black text-white font-heading">

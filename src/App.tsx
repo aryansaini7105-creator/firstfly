@@ -134,7 +134,11 @@ export default function App() {
             <SecurityAndSafety />
             <ReviewsAndStats />
             <FAQSection />
-            <Footer />
+            <Footer
+              onSelectVehicle={handleSelectVehicle}
+              onSelectRoute={handleSelectRoute}
+              onOpenBooking={() => setIsBookingOpen(true)}
+            />
           </Suspense>
         </main>
 

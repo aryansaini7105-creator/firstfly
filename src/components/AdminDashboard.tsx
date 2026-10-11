@@ -51,6 +51,7 @@ import {
 import { auth, db, googleProvider, handleFirestoreError, OperationType } from '../lib/firebase';
 import { Inquiry, InquiryStatus, InquiryType } from '../types/inquiry';
 import { COMPANY_DETAILS } from '../data/travelData';
+import { BrandLogo } from './BrandLogo';
 
 const AUTHORIZED_EMAILS = [
   'aryansaini7105@gmail.com',
@@ -450,14 +451,27 @@ export const AdminDashboard: React.FC = () => {
 
         <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl relative z-10">
           <div className="text-center mb-8">
-            <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl mx-auto flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20 mb-4">
-              <ShieldCheck className="w-8 h-8 font-black" />
+            <div className="flex justify-center mb-3">
+              <BrandLogo
+                variant="stacked"
+                theme="dark"
+                size="lg"
+                showSubtitle={true}
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/');
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+                title="Return to FirstFly Tours & Travels Website"
+              />
             </div>
-            <h1 className="text-2xl font-black tracking-tight text-white font-heading">
-              FirstFly <span className="text-amber-400">Admin Portal</span>
-            </h1>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-wide mt-2">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>OFFICIAL ADMIN PORTAL</span>
+            </div>
             <p className="text-xs text-slate-400 mt-2">
-              Secure Dispatch & Customer Leads Management
+              Secure Dispatch &amp; Customer Leads Management
             </p>
           </div>
 
@@ -591,20 +605,25 @@ export const AdminDashboard: React.FC = () => {
       <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md">
-              <ShieldCheck className="w-5 h-5 font-black" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-heading font-black text-white text-base tracking-tight">
-                  FIRST<span className="text-amber-400">FLY</span>
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-wider border border-amber-500/30">
-                  Admin Portal
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">
-                Customer Inquiries & Live Dispatch Desk
+            <BrandLogo
+              variant="horizontal"
+              theme="dark"
+              size="sm"
+              showSubtitle={false}
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              title="Return to FirstFly Tours & Travels Website"
+            />
+            <div className="hidden sm:flex items-center gap-2 border-l border-slate-800 pl-3">
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-wider border border-amber-500/30">
+                Admin Desk
+              </span>
+              <p className="text-[11px] text-slate-400 hidden lg:block">
+                Customer Inquiries &amp; Live Dispatch
               </p>
             </div>
           </div>

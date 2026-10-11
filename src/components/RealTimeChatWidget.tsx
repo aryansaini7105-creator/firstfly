@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { COMPANY_DETAILS, FLEET_DATA } from '../data/travelData';
 import { useLanguage } from '../context/LanguageContext';
+import { BrandLogo } from './BrandLogo';
 
 interface ChatMessage {
   id: string;
@@ -132,10 +133,8 @@ export const RealTimeChatWidget: React.FC<RealTimeChatWidgetProps> = ({
         <div className="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-4 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-slate-900 animate-pulse"></span>
+              <BrandLogo variant="badge" size="sm" className="w-10 h-10 shrink-0" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-slate-900 animate-pulse"></span>
             </div>
             <div>
               <div className="flex items-center gap-2">

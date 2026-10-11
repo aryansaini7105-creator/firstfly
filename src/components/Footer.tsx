@@ -17,8 +17,19 @@ import {
 import { COMPANY_DETAILS, POPULAR_ROUTES, FLEET_DATA } from '../data/travelData';
 import { useLanguage } from '../context/LanguageContext';
 import { submitInquiry } from '../lib/firebase';
+import { BrandLogo } from './BrandLogo';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onSelectVehicle?: (vehicle: any) => void;
+  onSelectRoute?: (from: string, to: string, vehicleId: string) => void;
+  onOpenBooking?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({
+  onSelectVehicle,
+  onSelectRoute,
+  onOpenBooking,
+}) => {
   const { t } = useLanguage();
 
   // Quick Contact Form State
@@ -76,13 +87,13 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 pb-12 border-b border-slate-900">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md">
-                <Compass className="w-6 h-6 font-black" />
-              </div>
-              <span className="text-2xl font-black text-white font-heading tracking-tight">
-                FIRST<span className="text-amber-400">FLY</span>
-              </span>
+            <div className="pb-1">
+              <BrandLogo
+                variant="horizontal"
+                theme="dark"
+                size="md"
+                title="FirstFly Tours & Travels - Return to top"
+              />
             </div>
 
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
@@ -129,9 +140,23 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs">
               {FLEET_DATA.map((v) => (
                 <li key={v.id}>
-                  <a href="#fleet" className="hover:text-amber-400 transition-colors">
-                    {v.name} ({v.seats} Seater)
-                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onSelectVehicle) {
+                        onSelectVehicle(v);
+                      } else if (onOpenBooking) {
+                        onOpenBooking();
+                      } else {
+                        const el = document.getElementById('fleet');
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="hover:text-amber-400 transition-colors text-left cursor-pointer flex items-center gap-1 group"
+                  >
+                    <span className="text-amber-500/60 group-hover:text-amber-400">›</span>
+                    <span>{v.name} ({v.seats} Seater)</span>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -145,9 +170,23 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs">
               {POPULAR_ROUTES.slice(0, 6).map((r) => (
                 <li key={r.id}>
-                  <a href="#calculator" className="hover:text-amber-400 transition-colors">
-                    {r.from} ➔ {r.to}
-                  </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onSelectRoute) {
+                        onSelectRoute(r.from, r.to, 'innova-crysta');
+                      } else if (onOpenBooking) {
+                        onOpenBooking();
+                      } else {
+                        const el = document.getElementById('fleet');
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="hover:text-amber-400 transition-colors text-left cursor-pointer flex items-center gap-1 group"
+                  >
+                    <span className="text-amber-500/60 group-hover:text-amber-400">›</span>
+                    <span>{r.from} ➔ {r.to}</span>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -262,7 +301,13 @@ export const Footer: React.FC = () => {
             {/* Owner Admin Portal Access Link */}
             <a
               href="/admin"
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-400 border border-slate-800/80 transition-colors text-[11px] font-semibold"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/admin');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-amber-400 border border-slate-800/80 transition-colors text-[11px] font-semibold cursor-pointer"
             >
               <Lock className="w-3 h-3 text-amber-400" />
               <span>Admin Portal</span>

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <defs>
+    <linearGradient id="sqBg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00a8e8"/>
+      <stop offset="40%" stop-color="#0284c7"/>
+      <stop offset="85%" stop-color="#0f2852"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <radialGradient id="sqGlobe" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#075985"/>
+    </radialGradient>
+
+    <linearGradient id="sqGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="35%" stop-color="#f59e0b"/>
+      <stop offset="75%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+
+    <filter id="sqShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Luxury Squircle Card -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#sqBg)" filter="url(#sqShadow)"/>
+  <rect x="24" y="24" width="464" height="464" rx="112" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.3"/>
+
+  <!-- Compass Ring -->
+  <circle cx="256" cy="270" r="162" stroke="url(#sqGold)" stroke-width="15" fill="none"/>
+  <circle cx="256" cy="270" r="176" stroke="url(#sqGold)" stroke-width="3" stroke-dasharray="6 18" fill="none" opacity="0.6"/>
+
+  <!-- Compass Cardinal Ticks -->
+  <line x1="256" y1="96" x2="256" y2="116" stroke="url(#sqGold)" stroke-width="8" stroke-linecap="round"/>
+  <line x1="256" y1="424" x2="256" y2="444" stroke="url(#sqGold)" stroke-width="8" stroke-linecap="round"/>
+  <line x1="82" y1="270" x2="102" y2="270" stroke="url(#sqGold)" stroke-width="8" stroke-linecap="round"/>
+  <line x1="410" y1="270" x2="430" y2="270" stroke="url(#sqGold)" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Compass Pointer -->
+  <path d="M 256 80 L 278 124 L 256 114 Z" fill="#fef08a"/>
+  <path d="M 256 80 L 234 124 L 256 114 Z" fill="#d97706"/>
+
+  <!-- Globe Body -->
+  <circle cx="256" cy="270" r="142" fill="url(#sqGlobe)"/>
+
+  <!-- Globe Coordinates -->
+  <ellipse cx="256" cy="270" rx="84" ry="142" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.4" fill="none"/>
+  <ellipse cx="256" cy="270" rx="142" ry="62" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.4" fill="none"/>
+  <line x1="114" y1="270" x2="398" y2="270" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.4"/>
+  <line x1="256" y1="128" x2="256" y2="412" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.4"/>
+
+  <!-- Continents -->
+  <path d="M 180 190 Q 200 166 238 180 Q 248 200 232 220 Q 202 230 180 190 Z" fill="#ffffff" fill-opacity="0.75"/>
+  <path d="M 268 180 Q 312 166 328 194 Q 340 226 312 242 Q 288 230 268 204 Z" fill="#ffffff" fill-opacity="0.75"/>
+  <path d="M 196 266 Q 220 250 236 274 Q 228 314 204 306 Q 188 290 196 266 Z" fill="#ffffff" fill-opacity="0.75"/>
+  <path d="M 278 258 Q 314 254 322 282 Q 310 318 282 302 Q 266 282 278 258 Z" fill="#ffffff" fill-opacity="0.75"/>
+
+  <!-- Lower Wing Bar in White/Cyan -->
+  <path d="M 194 324 C 234 324 290 320 346 312 C 338 328 306 344 250 348 C 206 352 186 336 194 324 Z" fill="#ffffff" fill-opacity="0.95"/>
+
+  <!-- Swooshing Jet Trail Arc -->
+  <path d="M 128 402 C 136 348 172 294 228 254 C 284 214 360 182 452 134 C 388 170 308 214 252 266 C 196 318 164 366 152 400 Z" fill="#ffffff"/>
+
+  <!-- Climbing Gold Airplane -->
+  <g transform="translate(442, 126) rotate(-35) scale(3.3)">
+    <path d="M 0 -20 C 1.4 -20 2.4 -18 2.6 -13 L 3.2 0 L 16 7 L 16 9.8 L 3.2 6.8 L 2.8 14.5 L 6.8 17.8 L 6.8 20 L 0 18.2 L -6.8 20 L -6.8 17.8 L -2.8 14.5 L -3.2 6.8 L -16 9.8 L -16 7 L -3.2 0 L -2.6 -13 C -2.4 -18 -1.4 -20 0 -20 Z"
+      fill="url(#sqGold)"/>
+  </g>
+</svg>
